@@ -3,4 +3,5 @@ clear
 echo ---------------------------
 make
 #make clean
-make run
+make run server
+make run client
