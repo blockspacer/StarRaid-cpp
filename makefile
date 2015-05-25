@@ -8,7 +8,7 @@ all: server client
 
 ### Server TARGET
 server: lib/server/main.o lib/server/server.o lib/srTimer.o lib/srNetwork.o
-	$(CC) lib/server/main.o lib/server/server.o lib/srTimer.o lib/srNetwork.o -o bin/server $(LDFLAGS_SERVER)
+	$(CC) lib/server/main.o lib/server/server.o lib/srTimer.o lib/srNetwork.o -o bin/server.bin $(LDFLAGS_SERVER)
 
 
 ### Server FILES
@@ -25,7 +25,7 @@ lib/server/server.o: src/server/server.cpp
 
 ### Client TARGET
 client: lib/client/main.o
-	$(CC) lib/client/main.o -o bin/client $(LDFLAGS_CLIENT)
+	$(CC) lib/client/main.o -o bin/client.bin $(LDFLAGS_CLIENT)
 
 
 ### Client FILES

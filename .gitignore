@@ -1,2 +1,4 @@
-lib/*
-bin/*
+bin/client.bin
+bin/server.bin
+bin/*.o
+lib/*.o
