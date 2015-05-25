@@ -50,7 +50,7 @@ lib/srTimer.o: src/srTimer.cpp
 
 ### Cleanup
 clean:
-	rm lib/server/* lib/client/* bin/server bin/client
+	rm lib/*.o lib/server/*.o lib/client/*.o bin/*.bin
 
 #run: server
 #	./bin/server
