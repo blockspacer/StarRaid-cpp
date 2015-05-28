@@ -1,8 +1,10 @@
 #include <iostream>
 #include <unistd.h> //usleep
-#include "../srTimer.hpp"
 
-class server {
+#include "../srTimer.hpp"
+#include "../srTypes.hpp"
+
+class server : public srTypes {
 
 	private:
         long runtime;	//!< In var count up every second and contains the runtime

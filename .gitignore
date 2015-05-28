@@ -1,4 +1,5 @@
-bin/client.bin
-bin/server.bin
-bin/*.o
+bin/*.bin
 lib/*.o
+lib/client/*.o
+lib/server/*.o
+

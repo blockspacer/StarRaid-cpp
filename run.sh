@@ -1,7 +1,7 @@
 #!/bin/sh
 clear
 echo ---------------------------
+make clean
 make
-#make clean
-make run server
-make run client
+#make run server
+#make run client

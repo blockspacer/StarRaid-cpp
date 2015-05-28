@@ -1,64 +1,26 @@
-#include "SDL/SDL.h"
+#include "client.hpp"
 
-int main ( int argc, char *argv[] )
-{
-  /* initialize SDL */
-  SDL_Init(SDL_INIT_VIDEO);
 
-  /* set the title bar */
-  SDL_WM_SetCaption("SDL Test", "SDL Test");
+using namespace std;
 
-  /* create window */
-  SDL_Surface* screen = SDL_SetVideoMode(640, 480, 0, 0);
+int main(int argc, char *argv[]) {
 
-  /* load bitmap to temp surface */
-  SDL_Surface* temp = SDL_LoadBMP("res/sfTest.bmp");
+    /// create the game engine
+    client myClient;
 
-  /* convert bitmap to display format */
-  SDL_Surface* bg = SDL_DisplayFormat(temp);
+    /// init the engine
+    myClient.init("client.xml");
 
-  /* free the temp surface */
-  SDL_FreeSurface(temp);
 
-  SDL_Event event;
-  int gameover = 0;
+    int end=0;
+    while(end==0)  {
 
-  /* message pump */
-  while (!gameover)
-  {
-    /* look for an event */
-    if (SDL_PollEvent(&event)) {
-      /* an event was found */
-      switch (event.type) {
-        /* close button clicked */
-        case SDL_QUIT:
-          gameover = 1;
-          break;
-
-        /* handle the keyboard */
-        case SDL_KEYDOWN:
-          switch (event.key.keysym.sym) {
-            case SDLK_ESCAPE:
-            case SDLK_q:
-              gameover = 1;
-              break;
-          }
-          break;
-      }
+        /// run the game
+        end = myClient.run();   // reboot on 0 end on 1
     }
 
-    /* draw the background */
-    SDL_BlitSurface(bg, NULL, screen, NULL);
+    /// init the engine
+    myClient.stop();
 
-    /* update the screen */
-    SDL_UpdateRect(screen, 0, 0, 0, 0);
-  }
-
-  /* free the background surface */
-  SDL_FreeSurface(bg);
-
-  /* cleanup SDL */
-  SDL_Quit();
-
-  return 0;
+    return 0;
 }
