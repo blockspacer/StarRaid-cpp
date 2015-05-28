@@ -13,7 +13,7 @@ int main() {
     int verbose = 1; // 0:nothing, 1:normal, 2:debug
 
 	// engine
-    server starraid(verbose);
+    server starraid("server.conf");
 
     // signal hooks
     signal( SIGINT, &handler );

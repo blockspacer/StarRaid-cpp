@@ -2,8 +2,12 @@
 
 using namespace std;
 
-server::server(int verbose) {
-    sysNoise = verbose;
+server::server(string pPath) {
+    logfile.open("server.log", ios::out);
+    logfile << "---- starting server ----" << endl;
+
+    config.load(pPath);
+
     cnt = 0;
 
     // timers
@@ -16,6 +20,8 @@ server::server(int verbose) {
     timers.addTimer("second", 1000); //   1 times per second
     timers.addTimer("tenth", 100);  //  10 times per second
     timers.addTimer("100th", 10);   // 100 times per second
+
+    logfile << "OK" << endl;
 }
 
 server::~server() {
@@ -37,11 +43,8 @@ void server::tick(void) {
         lps = 0;
         dps = 0;
 
-        if(sysNoise>=1) {
-            cout << "Tick: " << fpsSmooth;
-            //cout << " | " << timers.getTimerInfos();
-            cout << endl;
-        }
+        cout << "Tick: " << fpsSmooth;
+        cout << endl;
     }
 
     // 10x second

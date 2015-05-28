@@ -12,11 +12,11 @@ client::~client() {
 
 void client::init(string pPath) {
     logfile.open("client.log", ios::out);
-    logfile << "---- starting engine ----" << endl;
+    logfile << "---- starting client ----" << endl;
 
     config.load(pPath);
 
-    cout << "OK" << endl;
+    logfile << "OK" << endl;
 }
 
 
@@ -26,7 +26,7 @@ void client::stop(void) {
 
 
 void client::initGFX(void) {
-    logfile << "---- starting engine ----" << endl;
+    logfile << "---- starting GFX ----" << endl;
 
     int resX = config.getValueInt("ResolutionX", 640);
     int resY = config.getValueInt("ResolutionY", 480);

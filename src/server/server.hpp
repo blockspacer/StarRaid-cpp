@@ -1,8 +1,12 @@
+#include <string.h>     // strcpy,strcmp
 #include <iostream>
+#include <sstream>
+#include <fstream>
 #include <unistd.h> //usleep
 
 #include "../srTimer.hpp"
 #include "../srTypes.hpp"
+#include "../srConfig.hpp"
 
 class server : public srTypes {
 
@@ -20,8 +24,11 @@ class server : public srTypes {
 	srTimer timers;
 
     public:
-        server(int verbose);
+        server(string pPath);
         ~server();
         void tick(void);
         int cnt;
+
+        ofstream logfile;
+        srConfig config;
 };

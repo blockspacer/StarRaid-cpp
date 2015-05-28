@@ -3,5 +3,6 @@ clear
 echo ---------------------------
 make clean
 make
-#make run server
-#make run client
+cd bin/ && ./server.bin &
+cd bin/ && ./client.bin &
+
