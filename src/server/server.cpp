@@ -43,8 +43,7 @@ void server::tick(void) {
         lps = 0;
         dps = 0;
 
-        cout << "Tick: " << fpsSmooth;
-        cout << endl;
+        logfile << "Tick: " << fpsSmooth << endl;
     }
 
     // 10x second

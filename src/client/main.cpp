@@ -1,4 +1,7 @@
 #include "client.hpp"
+#include "gfxSystem.hpp"
+
+gfxSystem *gfxSystem::globInstance = 0;
 
 
 using namespace std;
@@ -18,9 +21,6 @@ int main(int argc, char *argv[]) {
         /// run the game
         end = myClient.run();   // reboot on 0 end on 1
     }
-
-    /// init the engine
-    myClient.stop();
 
     return 0;
 }

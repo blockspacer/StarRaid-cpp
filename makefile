@@ -1,15 +1,15 @@
 CC=g++ 
 CFLAGS= -c
-LDFLAGS_CLIENT=`sdl-config --cflags --libs`
+LDFLAGS_CLIENT = `sdl-config --cflags --libs` -lSDL_ttf -lSDL_gfx -lSDL_image
 LDFLAGS_SERVER=-lSDL
 
 #npc client
 all: server client
 
 ### Server TARGET
-server: lib/server/main.o lib/server/server.o lib/srTimer.o lib/srNetwork.o lib/srConfig.o lib/srTypes.o
-	$(CC) lib/server/main.o lib/server/server.o lib/srTimer.o lib/srNetwork.o lib/srConfig.o lib/srTypes.o -o bin/server.bin $(LDFLAGS_SERVER)
-
+SERVER_FILES = $(shell ls src/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' ) $(shell ls src/server/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' )
+server: $(SERVER_FILES)
+	$(CC) $(SERVER_FILES) -o bin/server.bin $(LDFLAGS_SERVER)
 
 ### Server FILES
 lib/server/main.o: src/server/main.cpp
@@ -23,9 +23,9 @@ lib/server/server.o: src/server/server.cpp
 
 
 ### Client TARGET
-client: lib/client/main.o lib/client/client.o lib/srTimer.o lib/srNetwork.o lib/srConfig.o lib/srTypes.o
-	$(CC) lib/client/main.o lib/client/client.o lib/srTimer.o lib/srNetwork.o lib/srConfig.o lib/srTypes.o -o bin/client.bin $(LDFLAGS_CLIENT)
-
+CLIENT_FILES = $(shell ls src/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' ) $(shell ls src/client/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' )
+client: $(CLIENT_FILES)
+	$(CC) $(CLIENT_FILES) -o bin/client.bin $(LDFLAGS_CLIENT)
 
 ### Client FILES
 lib/client/main.o: src/client/main.cpp
@@ -33,6 +33,18 @@ lib/client/main.o: src/client/main.cpp
 
 lib/client/client.o: src/client/client.cpp
 	$(CC) $(CFLAGS) -L lib/client/ src/client/client.cpp -o lib/client/client.o
+
+lib/client/sdlHelper.o: src/client/sdlHelper.cpp
+	$(CC) $(CFLAGS) -L lib/client/ src/client/sdlHelper.cpp -o lib/client/sdlHelper.o
+
+lib/client/gfxImage.o: src/client/gfxImage.cpp
+	$(CC) $(CFLAGS) -L lib/client/ src/client/gfxImage.cpp -o lib/client/gfxImage.o
+
+lib/client/gfxSystem.o: src/client/gfxSystem.cpp
+	$(CC) $(CFLAGS) -L lib/client/ src/client/gfxSystem.cpp -o lib/client/gfxSystem.o
+
+lib/client/gfxFont.o: src/client/gfxFont.cpp
+	$(CC) $(CFLAGS) -L lib/client/ src/client/gfxFont.cpp -o lib/client/gfxFont.o
 
 
 
@@ -55,7 +67,7 @@ lib/srTypes.o: src/srTypes.cpp
 
 
 
-### Cleanup
+### Cleanup: cant use, otherwise wildecard does not find the files
 clean:
 	rm lib/*.o lib/server/*.o lib/client/*.o bin/*.bin
 
@@ -64,3 +76,6 @@ clean:
 
 #run: client
 #	cd bin && ./client
+
+test:
+	@echo $(shell ls src/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' ) $(shell ls src/client/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' )

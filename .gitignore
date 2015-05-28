@@ -1,4 +1,5 @@
 bin/*.bin
+bin/*.log
 lib/*.o
 lib/client/*.o
 lib/server/*.o
