@@ -1,11 +1,11 @@
 /**
- * @addtogroup global
+ * @addtogroup client
  * @{
  *
  * @file   sdlHelper.h
  * @author xuedi (xuedi@beijingcode.org)
- * @date   2010-10-26
- * @brief  Some functions typical for SDL but not in the SDL code (SDL_BOOST^^)
+ * @date   2015-05-29
+ * @brief  Simple helper function to addon onto SDL
  *
  * License:
  *    This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Copyright:
- *    2005-2010 by Daniel Koch (xuedi)
+ *    2005-2015 by Daniel (xuedi) Koch
  *
  */
 

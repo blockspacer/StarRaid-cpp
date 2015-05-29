@@ -1,11 +1,11 @@
 /**
- * @addtogroup Client
+ * @addtogroup client
  * @{
  *
  * @file   gfxImage.h
  * @author xuedi (xuedi@beijingcode.org)
- * @date   2010-06-20
- * @brief  Toolset to handle images
+ * @date   2015-05-29
+ * @brief  image control
  *
  * License:
  *    This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Copyright:
- *    2005-2010 by Daniel Koch (xuedi)
+ *    2005-2015 by Daniel (xuedi) Koch
  *
  */
 

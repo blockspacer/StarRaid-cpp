@@ -34,6 +34,9 @@
 //#include "BitStream.h"
 //#include "RakNetTypes.h"
 
+/**
+ * Does all the network communication and holds the serializing bitstream functionality
+ */
 class srNetwork {;
     public:
         srNetwork();

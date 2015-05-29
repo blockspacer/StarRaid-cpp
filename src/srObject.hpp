@@ -45,7 +45,6 @@ using namespace std;
  * work with the object
  * @warning Do not Change or modify objBASE, this are core elements of the Server&Cliend classes
  */
-
 class srObject {
 
 

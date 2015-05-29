@@ -1,10 +1,10 @@
 /**
- * @addtogroup Client
+ * @addtogroup client
  * @{
  *
- * @file   sdlFont.h
+ * @file   gfxFont.h
  * @author xuedi (xuedi@beijingcode.org)
- * @date   2010-06-20
+ * @date   2015-05-29
  * @brief  Responsible for fond loading and dawn on surface commands
  *
  * License:
@@ -22,7 +22,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Copyright:
- *    2005-2010 by Daniel Koch (xuedi)
+ *    2005-2015 by Daniel (xuedi) Koch
  *
  */
 

@@ -6,4 +6,5 @@ lib/client/*.o
 lib/server/*.o
 doc/html
 doc/man
+doc/latex
 
