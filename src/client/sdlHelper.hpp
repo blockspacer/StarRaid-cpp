@@ -64,5 +64,4 @@ class sdlHelper {
 };
 
 #endif // SDLHELPER_H
-
-/** @} global Group*/
+/** @} group*/

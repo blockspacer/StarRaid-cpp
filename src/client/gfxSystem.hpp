@@ -147,5 +147,5 @@ class gfxSystem : public sdlHelper {
 
 };
 
-/** @} Client Group*/
 #endif // GFXSYSTEM_H
+/** @} group*/

@@ -67,5 +67,4 @@ class srTypes {
 };
 
 #endif // SRGLOBALTYPES_H
-
-/** @} global Group*/
+/** @} group*/

@@ -26,9 +26,9 @@
  *
  */
 
-
 #ifndef SROBJECT_H
 #define SROBJECT_H
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -94,5 +94,4 @@ class srObject {
 };
 
 #endif // SROBJECT_H
-
-/** @} global Group*/
+/** @} group*/

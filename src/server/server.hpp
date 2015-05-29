@@ -26,6 +26,10 @@
  *
  */
 
+#ifndef SERVER_H
+#define SERVER_H
+
+
 #include <string.h>     // strcpy,strcmp
 #include <iostream>
 #include <sstream>
@@ -59,3 +63,6 @@ class server : public srTypes {
         ofstream logfile;
         srConfig config;
 };
+
+#endif // SERVER_H
+/** @} group*/

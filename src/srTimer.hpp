@@ -88,5 +88,4 @@ class srTimer {
 };
 
 #endif // TIMER_H
-
-/** @} global Group*/
+/** @} group*/

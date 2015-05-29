@@ -29,9 +29,11 @@
 #ifndef SRCARGO_H
 #define SRCARGO_H
 
+
 #include <string.h>
 #include <iostream>
 #include <sstream>
+
 
 using namespace std;
 
@@ -54,5 +56,4 @@ class srCargo {
 };
 
 #endif // SRCARGO_H
-
-/** @} global Group*/
+/** @} group*/

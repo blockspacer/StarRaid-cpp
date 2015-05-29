@@ -98,5 +98,5 @@ class gfxFont : public sdlHelper {
 
 };
 
-/** @} Client Group*/
 #endif // GFXFONT_H
+/** @} group*/

@@ -26,6 +26,10 @@
  *
  */
 
+#ifndef SRNETWORK_H
+#define SRNETWORK_H
+
+
 //#include <unistd.h> //usleep
 #include <stdio.h>
 #include <string.h>
@@ -42,3 +46,6 @@ class srNetwork {;
         srNetwork();
         ~srNetwork();
 };
+
+#endif // SRNETWORK_H
+/** @} group*/

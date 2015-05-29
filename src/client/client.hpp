@@ -126,4 +126,4 @@ class client : public srTypes {
 
 #endif // CLIENT_H
 
-/** @} Client Group*/
+/** @} group*/

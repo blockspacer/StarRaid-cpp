@@ -139,5 +139,5 @@ class gfxImage : public sdlHelper {
 
 };
 
-/** @} Client Group*/
 #endif // gfxImage_H
+/** @} group*/

@@ -30,6 +30,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+
 #include <string.h>     // strcpy,strcmp
 #include <iostream>     // std::cout
 #include <fstream>      // std::ifstream
@@ -73,5 +74,5 @@ class srConfig {
 
 };
 
-/** @} Client Group*/
 #endif // CONFIG_H
+/** @} group*/
