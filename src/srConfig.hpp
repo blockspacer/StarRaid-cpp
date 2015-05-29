@@ -2,7 +2,7 @@
  * @addtogroup shared
  * @{
  *
- * @file   srConfig.h
+ * @file   srConfig.hpp
  * @author xuedi (xuedi@beijingcode.org)
  * @date   2015-05-29
  * @brief  This file contains the config cache

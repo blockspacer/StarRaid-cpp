@@ -2,7 +2,7 @@
  * @addtogroup shared
  * @{
  *
- * @file   srObject.h
+ * @file   srObject.hpp
  * @author xuedi (xuedi@beijingcode.org)
  * @date   2015-05-29
  * @brief  The main object components that server AND client have to have

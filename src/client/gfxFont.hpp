@@ -2,7 +2,7 @@
  * @addtogroup client
  * @{
  *
- * @file   gfxFont.h
+ * @file   gfxFont.hpp
  * @author xuedi (xuedi@beijingcode.org)
  * @date   2015-05-29
  * @brief  Responsible for fond loading and dawn on surface commands

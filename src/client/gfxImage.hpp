@@ -2,7 +2,7 @@
  * @addtogroup client
  * @{
  *
- * @file   gfxImage.h
+ * @file   gfxImage.hpp
  * @author xuedi (xuedi@beijingcode.org)
  * @date   2015-05-29
  * @brief  image control

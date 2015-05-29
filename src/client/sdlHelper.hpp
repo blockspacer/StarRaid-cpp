@@ -2,7 +2,7 @@
  * @addtogroup client
  * @{
  *
- * @file   sdlHelper.h
+ * @file   sdlHelper.hpp
  * @author xuedi (xuedi@beijingcode.org)
  * @date   2015-05-29
  * @brief  Simple helper function to addon onto SDL

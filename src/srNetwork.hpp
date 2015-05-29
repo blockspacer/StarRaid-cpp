@@ -2,7 +2,7 @@
  * @addtogroup shared
  * @{
  *
- * @file   srNetwork.h
+ * @file   srNetwork.hpp
  * @author xuedi (xuedi@beijingcode.org)
  * @date   2015-05-29
  * @brief  General networking stack

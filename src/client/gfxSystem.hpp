@@ -2,7 +2,7 @@
  * @addtogroup client
  * @{
  *
- * @file   gfxSystem.h
+ * @file   gfxSystem.hpp
  * @author xuedi (xuedi@beijingcode.org)
  * @date   2015-05-29
  * @brief  Holds all media as singelton

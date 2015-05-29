@@ -2,7 +2,7 @@
  * @addtogroup shared
  * @{
  *
- * @file   srCargo.h
+ * @file   srCargo.hpp
  * @author xuedi (xuedi@beijingcode.org)
  * @date   2015-05-29
  * @brief  Contains the cargo of the object

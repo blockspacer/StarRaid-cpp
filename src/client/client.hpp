@@ -2,7 +2,7 @@
  * @addtogroup client
  * @{
  *
- * @file   client.h
+ * @file   client.hpp
  * @author xuedi (xuedi@beijingcode.org)
  * @date   2015-05-29
  * @brief  The client main engine
