@@ -2,10 +2,10 @@
  * @addtogroup shared
  * @{
  *
- * @file   srNetwork.h
+ * @file   srCargo.h
  * @author xuedi (xuedi@beijingcode.org)
  * @date   2015-05-29
- * @brief  General networking stack
+ * @brief  Contains the cargo of the object
  *
  * License:
  *    This program is free software: you can redistribute it and/or modify
@@ -26,16 +26,33 @@
  *
  */
 
-//#include <unistd.h> //usleep
-#include <stdio.h>
-#include <string.h>
-//#include "RakPeerInterface.h"
-//#include "MessageIdentifiers.h"
-//#include "BitStream.h"
-//#include "RakNetTypes.h"
+#ifndef SRCARGO_H
+#define SRCARGO_H
 
-class srNetwork {;
+#include <string.h>
+#include <iostream>
+#include <sstream>
+
+using namespace std;
+
+class srCargo {
+
+
     public:
-        srNetwork();
-        ~srNetwork();
+        srCargo();
+        virtual ~srCargo();
+
+        string type;
+        int amount;
+
+    protected:
+
+
+    private:
+
+
 };
+
+#endif // SRCARGO_H
+
+/** @} global Group*/

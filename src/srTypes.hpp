@@ -1,10 +1,10 @@
 /**
- * @addtogroup global
+ * @addtogroup shared
  * @{
  *
- * @file   srGlobalTypes.h
+ * @file   srTypes.hpp
  * @author xuedi (xuedi@beijingcode.org)
- * @date   2010-11-30
+ * @date   2015-05-29
  * @brief  Some Types and definitions that are used everywhere
  *
  * License:
@@ -22,7 +22,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Copyright:
- *    2005-2010 by Daniel Koch (xuedi)
+ *    2005-2015 by Daniel (xuedi) Koch
  *
  */
 

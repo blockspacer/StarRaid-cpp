@@ -1,10 +1,10 @@
 /**
- * @addtogroup Client
+ * @addtogroup shared
  * @{
  *
  * @file   srConfig.h
  * @author xuedi (xuedi@beijingcode.org)
- * @date   2010-06-20
+ * @date   2015-05-29
  * @brief  This file contains the config cache
  * @todo add common elements into a common base class and its values into the config files
  *
@@ -23,7 +23,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Copyright:
- *    2005-2010 by Daniel Koch (xuedi)
+ *    2005-2015 by Daniel (xuedi) Koch
  *
  */
 

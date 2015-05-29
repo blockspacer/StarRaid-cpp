@@ -63,6 +63,12 @@ lib/srConfig.o: src/srConfig.cpp
 lib/srTypes.o: src/srTypes.cpp
 	$(CC) $(CFLAGS) src/srTypes.cpp -o lib/srTypes.o
 
+lib/srObject.o: src/srObject.cpp
+	$(CC) $(CFLAGS) src/srObject.cpp -o lib/srObject.o
+
+lib/srCargo.o: src/srCargo.cpp
+	$(CC) $(CFLAGS) src/srCargo.cpp -o lib/srCargo.o
+
 
 
 

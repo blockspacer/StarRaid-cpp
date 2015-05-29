@@ -4,13 +4,13 @@ using namespace std;
 
 server::server(string pPath) {
     logfile.open("server.log", ios::out);
-    logfile << "---- starting server ----" << endl;
+    logfile << "Init ... ";
 
+    // load configs
     config.load(pPath);
 
-    cnt = 0;
-
     // timers
+    runtime=0;
     fps = 0;
     lps = 0;
     dps = 0;
@@ -18,8 +18,8 @@ server::server(string pPath) {
     lpsSmooth = 0;
     dpsSmooth = 0;
     timers.addTimer("second", 1000); //   1 times per second
-    timers.addTimer("tenth", 100);  //  10 times per second
-    timers.addTimer("100th", 10);   // 100 times per second
+    timers.addTimer("tenth",   100); //  10 times per second
+    timers.addTimer("100th",    10); // 100 times per second
 
     logfile << "OK" << endl;
 }
@@ -38,12 +38,10 @@ void server::tick(void) {
         dpsSmooth = dps; // network packages per second
         timers.tickSecond();
         runtime++;
-
         fps = 0;
         lps = 0;
         dps = 0;
-
-        logfile << "Tick: " << fpsSmooth << endl;
+        logfile << "[Tick-" << runtime << "] fps: " << fpsSmooth << ", lps: " << lpsSmooth << ", dps: " << dpsSmooth << endl;
     }
 
     // 10x second
