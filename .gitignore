@@ -4,4 +4,6 @@ bin/GFX/
 lib/*.o
 lib/client/*.o
 lib/server/*.o
+doc/html
+doc/man
 
