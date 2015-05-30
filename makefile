@@ -1,7 +1,7 @@
 CC=g++ 
 CFLAGS= -c
 LDFLAGS_CLIENT = `sdl-config --cflags --libs` -lSDL_ttf -lSDL_gfx -lSDL_image
-LDFLAGS_SERVER=-lSDL
+LDFLAGS_SERVER = `mysql_config --cflags --libs` -lSDL
 
 #npc client
 all: server client
@@ -17,6 +17,9 @@ lib/server/main.o: src/server/main.cpp
 
 lib/server/server.o: src/server/server.cpp
 	$(CC) $(CFLAGS) -L lib/server/ src/server/server.cpp -o lib/server/server.o
+
+lib/server/database.o: src/server/database.cpp
+	$(CC) $(CFLAGS) -L lib/server/ src/server/database.cpp -o lib/server/database.o
 
 
 

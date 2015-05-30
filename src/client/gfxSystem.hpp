@@ -54,94 +54,94 @@ using namespace std;
 /// Global singelton that holds all the grafics and media
 class gfxSystem : public sdlHelper {
 
-    /// define the singelton pointer
-    static gfxSystem *globInstance;
+	/// define the singelton pointer
+	static gfxSystem *globInstance;
 
-    public:
+	public:
 
-        /// This class is used as an global singeltin instance
-        static gfxSystem *instance() {
-            if (!globInstance) globInstance = new gfxSystem;
-            return globInstance;
-        }
-
-
+		/// This class is used as an global singeltin instance
+		static gfxSystem *instance() {
+			if (!globInstance) globInstance = new gfxSystem;
+			return globInstance;
+		}
 
 
 
 
-        /// Construcor
-        gfxSystem();
-
-        /// Destrucor
-        virtual ~gfxSystem();
-
-        /// Sets a few internal options
-        void init(int resX, int resY);
-
-        /// request a surface
-        gfxImage* getSurface(string pKey);
 
 
+		/// Construcor
+		gfxSystem();
 
-        // Main ressources
-        gfxImage *sfNone;
+		/// Destrucor
+		virtual ~gfxSystem();
 
-        gfxImage *sfRadarSpotNeutralSmall;      //!< The image for the sfRadarSpotNeutralSmall
-        gfxImage *sfMessageWindow;              //!< The image for the sfMessageWindow
-        gfxImage *sfMouseSpot;                  //!< Will be displayed when there was a movement click
-        gfxImage *sfStarBig, *sfStarMiddle, *sfStarSmall;
-        gfxImage *sfMenue,                      //!< The image for the sfMenue
-                 *sfMenueBG,                    //!< The image for the sfMenueBG
-                 *sfMenueLogo,                  //!< The image for the sfMenueLogo
-                 *sfMenueActive,                //!< The image for the sfMenueActive
-                 *sfMenuePassive,               //!< The image for the sfMenuePassive
-                 *sfMenueBottom,                //!< The image for the sfMenueBottom
-                 *sfMenueBorder;                //!< The image for the sfMenueBorder
-        gfxImage *sfWinDecoBrownMenue,          //!< The image for the sfWinDecoBrownMenue
-                 *sfWinDecoBrownResize,         //!< The image for the sfWinDecoBrownResize
-                 *sfWinDecoBrownBackground,     //!< The image for the sfWinDecoBrownBackground
-                 *sfWinDecoBrownTopLeft,        //!< The image for the sfWinDecoBrownTopLeft
-                 *sfWinDecoBrownTopMiddle,      //!< The image for the sfWinDecoBrownTopMiddle
-                 *sfWinDecoBrownTopRight,       //!< The image for the sfWinDecoBrownTopRight
-                 *sfWinDecoBrownBottomLeft,     //!< The image for the sfWinDecoBrownBottomLeft
-                 *sfWinDecoBrownBottomMiddle,   //!< The image for the sfWinDecoBrownBottomMiddle
-                 *sfWinDecoBrownBottomRight,    //!< The image for the sfWinDecoBrownBottomRight
-                 *sfWinDecoBrownMiddleLeft,     //!< The image for the sfWinDecoBrownMiddleLeft
-                 *sfWinDecoBrownMiddleRight,    //!< The image for the sfWinDecoBrownMiddleRight
-                 *sfWinDecoBrownTextInputLeft,  //!< The image for the sfWinDecoBrownTextInputLeft
-                 *sfWinDecoBrownTextInputMiddle,//!< The image for the sfWinDecoBrownTextInputMiddle
-                 *sfWinDecoBrownTextInputRight; //!< The image for the sfWinDecoBrownTextInputRight
+		/// Sets a few internal options
+		void init(int resX, int resY);
+
+		/// request a surface
+		gfxImage* getSurface(string pKey);
 
 
-        /// Contains a Arial12 font
-        gfxFont *fontArial12;
 
-        /// Contains a Arial12 font
-        gfxFont *fontArial18;
+		// Main ressources
+		gfxImage *sfNone;
 
-    protected:
-    private:
+		gfxImage *sfRadarSpotNeutralSmall;      //!< The image for the sfRadarSpotNeutralSmall
+		gfxImage *sfMessageWindow;              //!< The image for the sfMessageWindow
+		gfxImage *sfMouseSpot;                  //!< Will be displayed when there was a movement click
+		gfxImage *sfStarBig, *sfStarMiddle, *sfStarSmall;
+		gfxImage *sfMenue,                      //!< The image for the sfMenue
+				 *sfMenueBG,                    //!< The image for the sfMenueBG
+				 *sfMenueLogo,                  //!< The image for the sfMenueLogo
+				 *sfMenueActive,                //!< The image for the sfMenueActive
+				 *sfMenuePassive,               //!< The image for the sfMenuePassive
+				 *sfMenueBottom,                //!< The image for the sfMenueBottom
+				 *sfMenueBorder;                //!< The image for the sfMenueBorder
+		gfxImage *sfWinDecoBrownMenue,          //!< The image for the sfWinDecoBrownMenue
+				 *sfWinDecoBrownResize,         //!< The image for the sfWinDecoBrownResize
+				 *sfWinDecoBrownBackground,     //!< The image for the sfWinDecoBrownBackground
+				 *sfWinDecoBrownTopLeft,        //!< The image for the sfWinDecoBrownTopLeft
+				 *sfWinDecoBrownTopMiddle,      //!< The image for the sfWinDecoBrownTopMiddle
+				 *sfWinDecoBrownTopRight,       //!< The image for the sfWinDecoBrownTopRight
+				 *sfWinDecoBrownBottomLeft,     //!< The image for the sfWinDecoBrownBottomLeft
+				 *sfWinDecoBrownBottomMiddle,   //!< The image for the sfWinDecoBrownBottomMiddle
+				 *sfWinDecoBrownBottomRight,    //!< The image for the sfWinDecoBrownBottomRight
+				 *sfWinDecoBrownMiddleLeft,     //!< The image for the sfWinDecoBrownMiddleLeft
+				 *sfWinDecoBrownMiddleRight,    //!< The image for the sfWinDecoBrownMiddleRight
+				 *sfWinDecoBrownTextInputLeft,  //!< The image for the sfWinDecoBrownTextInputLeft
+				 *sfWinDecoBrownTextInputMiddle,//!< The image for the sfWinDecoBrownTextInputMiddle
+				 *sfWinDecoBrownTextInputRight; //!< The image for the sfWinDecoBrownTextInputRight
 
-        /// Draw a surface out of the pool
-        void addToPool(string pName, string pFileName, int pRotate);
 
-        // type to make the code more clean
-        typedef std::pair<string, gfxImage*> gfxPoolPair;               //!< The Pair for the gfxPool
-        typedef std::map<string, gfxImage*> gfxPoolMap;                 //!< The Map for the gfxPool
-        typedef std::map<string, gfxImage*>::iterator gfxPoolIterator;  //!< The Iterator for the gfxPool
+		/// Contains a Arial12 font
+		gfxFont *fontArial12;
 
-        /// This is the gfxPool
-        map<string,gfxImage*> gfxPool;
+		/// Contains a Arial12 font
+		gfxFont *fontArial18;
 
-        /// Will be set after the load proccess is done
-        bool flagLoaded;
+	protected:
+	private:
 
-        /// puzzels together a menue
-        void createMenue(int resX, int resY);
+		/// Draw a surface out of the pool
+		void addToPool(string pName, string pFileName, int pRotate);
 
-        /// Does the decorations for the chat window
-        void createMsgWindow(int resX, int resY, int msgWinW, int msgWinH);
+		// type to make the code more clean
+		typedef std::pair<string, gfxImage*> gfxPoolPair;               //!< The Pair for the gfxPool
+		typedef std::map<string, gfxImage*> gfxPoolMap;                 //!< The Map for the gfxPool
+		typedef std::map<string, gfxImage*>::iterator gfxPoolIterator;  //!< The Iterator for the gfxPool
+
+		/// This is the gfxPool
+		map<string,gfxImage*> gfxPool;
+
+		/// Will be set after the load proccess is done
+		bool flagLoaded;
+
+		/// puzzels together a menue
+		void createMenue(int resX, int resY);
+
+		/// Does the decorations for the chat window
+		void createMsgWindow(int resX, int resY, int msgWinW, int msgWinH);
 
 
 

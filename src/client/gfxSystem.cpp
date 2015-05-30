@@ -216,7 +216,6 @@ void gfxSystem::createMsgWindow(int resX, int resY, int msgWinW, int msgWinH) {
 /**
  * Long description
  *   @note Try to keep the only point where SDL_GFX is applyed then phalanxing
- *   @param debuging Is debugginh en- or disabled
  *   @param resX The resolution width
  *   @param resY The resolution height
  */

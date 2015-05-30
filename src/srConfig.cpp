@@ -4,11 +4,11 @@
  * Set all variables to zero
  */
 srConfig::srConfig() {
-    //
+	loaded=false;
 }
 
 srConfig::~srConfig() {
-    //dtor
+	//dtor
 }
 
 /**
@@ -21,39 +21,39 @@ srConfig::~srConfig() {
  */
 void srConfig::load(string pPath) {
 
-    ifstream ifs( pPath.c_str() );
-    string temp;
-    unsigned int i;
-    bool flagReadValue;
-    string key, value;
+	ifstream ifs( pPath.c_str() );
+	string temp;
+	unsigned int i;
+	bool flagReadValue;
+	string key, value;
 
 
-    while( getline( ifs, temp ) ) {
+	while( getline( ifs, temp ) ) {
 
-        key="";
-        value="";
-        flagReadValue=0;
+		key="";
+		value="";
+		flagReadValue=0;
 
-        // check if not empty
-        if(temp.length()>0) {
+		// check if not empty
+		if(temp.length()>0) {
 
-            // check if not a comment
-            if(temp[0] != '#') {
+			// check if not a comment
+			if(temp[0] != '#') {
 
-                // loop for all characters
-                for(i=0; i<temp.length(); i++) {
-                    if(temp[i] == '=') flagReadValue=1;
-                    if(flagReadValue==0) key += temp[i];
-                    else if(temp[i] != '=') value += temp[i];
-                }
+				// loop for all characters
+				for(i=0; i<temp.length(); i++) {
+					if(temp[i] == '=') flagReadValue=1;
+					if(flagReadValue==0) key += temp[i];
+					else if(temp[i] != '=') value += temp[i];
+				}
 
-                // add Key/Value pair to the cache
-                cache.insert(pair<string, string>(key, value));
-            }
-        }
-    }
+				// add Key/Value pair to the cache
+				cache.insert(pair<string, string>(key, value));
+			}
+		}
+	}
 
-
+	loaded=true;
 }
 
 
@@ -61,7 +61,7 @@ void srConfig::load(string pPath) {
  * Sets the debugging flag
  */
 void srConfig::init(bool flagDebuging) {
-    //
+	//
 }
 
 
@@ -73,11 +73,12 @@ void srConfig::init(bool flagDebuging) {
  *   @param defaultValue if the key is not found, it will return the default value
  */
 int srConfig::getValueInt(string Key, int defaultValue) {
-    map<string, string>::iterator i = cache.find(Key);
-    if(i == cache.end()) {
-        return defaultValue;
-    }
-    return atoi(i->second.c_str());
+	isLoaded();
+	map<string, string>::iterator i = cache.find(Key);
+	if(i == cache.end()) {
+		return defaultValue;
+	}
+	return atoi(i->second.c_str());
 }
 
 /**
@@ -86,11 +87,23 @@ int srConfig::getValueInt(string Key, int defaultValue) {
  *   @param defaultValue if the key is not found, it will return the default value
  */
 string srConfig::getValueString(string Key, string defaultValue) {
-    map<string, string>::iterator i = cache.find(Key);
-    if(i == cache.end()) {
-        return defaultValue;
-    }
-    return i->second;
+	isLoaded();
+	map<string, string>::iterator i = cache.find(Key);
+	if(i == cache.end()) {
+		return defaultValue;
+	}
+	return i->second;
 }
+
+/**
+ * Check if the congif is already loaded
+ */
+void srConfig::isLoaded(void) {
+	if(loaded==false) {
+		cout << "srConfig::isLoaded: The config was not loaded " << endl;
+		throw exception();
+	}
+}
+
 
 

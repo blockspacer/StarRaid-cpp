@@ -30,38 +30,50 @@
 #define SERVER_H
 
 
-#include <string.h>     // strcpy,strcmp
+#include <string.h>			// strcpy,strcmp
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <unistd.h> //usleep
+#include <map>
+#include <vector>
+#include <unistd.h> 		//usleep
+
+#include "database.hpp"
 
 #include "../srTimer.hpp"
 #include "../srTypes.hpp"
 #include "../srConfig.hpp"
 
+
+using namespace std;
+
 class server : public srTypes {
 
 	private:
-        long runtime;	//!< In var count up every second and contains the runtime
-        int fps,        //!< This var counts the frames together and is reset every second
-            fpsSmooth;  //!< The secondly result of fps is bufferd here
-        int lps,        //!< This var counts calculation loop
-            lpsSmooth;  //!< The secondly result of lps is bufferd here
-        int dps,        //!< Counts the network deliveries
-            dpsSmooth;  //!< Is the smothen networkdelivery per second
-        int sysBreak,	//!< This is a very important var, it adjust the amount of time giving back to the operating system
-        	sysNoise;
+		long runtime;	//!< In var count up every second and contains the runtime
+		int fps,        //!< This var counts the frames together and is reset every second
+			fpsSmooth;  //!< The secondly result of fps is bufferd here
+		int lps,        //!< This var counts calculation loop
+			lpsSmooth;  //!< The secondly result of lps is bufferd here
+		int dps,        //!< Counts the network deliveries
+			dpsSmooth;  //!< Is the smothen networkdelivery per second
+		int sysBreak,	//!< This is a very important var, it adjust the amount of time giving back to the operating system
+			sysNoise;
 
-	srTimer timers;
+	   srTimer timers;
+	   database db;
 
-    public:
-        server(string pPath);
-        ~server();
-        void tick(void);
+	public:
+		server(string pPath);
+		~server();
+		void tick(void);
+		void loadObjects(void);
 
-        ofstream logfile;
-        srConfig config;
+		ofstream logfile;
+		srConfig config;
+
+		/// game objects
+		map<long, srObject> objects;
 };
 
 #endif // SERVER_H

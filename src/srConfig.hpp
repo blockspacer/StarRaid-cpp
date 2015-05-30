@@ -37,6 +37,7 @@
 #include <map>          // key/value store
 #include <stdio.h>      // atoi
 #include <stdlib.h>     // atoi
+#include <exception>    // trough
 
 
 //#include <yaml.h> //  -lyaml
@@ -48,6 +49,11 @@ using namespace std;
 
 /// This file contains the config cache
 class srConfig {
+
+    private:
+
+        /// Flag for loaded status
+        bool loaded;
 
     public:
 
@@ -71,6 +77,9 @@ class srConfig {
 
         /// graps a string out of the pool
         string getValueString(string Key, string defaultValue);
+
+        /// check if loaded
+        void isLoaded(void);
 
 };
 
