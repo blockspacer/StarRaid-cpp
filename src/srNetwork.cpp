@@ -4,7 +4,6 @@
 srNetwork::srNetwork() {
 	rakPacket = NULL;
 	rakPeer = RakNet::RakPeerInterface::GetInstance();
-	rakServerAddress = NULL;
 	rakIsServer = false;
 	rakInitiated = false;
 	rakConnected = false;
@@ -66,13 +65,13 @@ void srNetwork::rakTick(void) {
 
 				case ID_CONNECTION_REQUEST_ACCEPTED:
 					cout << "rakTick: A new connection." << endl;
-					rakNetSend(VERSION_ASK, rakPacket->systemAddress);
+//					rakNetSend(VERSION_ASK, rakPacket->systemAddress);
 				break;
 
 				case ID_NEW_INCOMING_CONNECTION:
 					cout << "rakTick: A connection is incoming." << endl;
 					rakNetClientAdd(rakPacket);
-					rakNetSend(VERSION_ASK, rakPacket->systemAddress);
+//					rakNetSend(VERSION_ASK, rakPacket->systemAddress);
 				break;
 
 				case ID_NO_FREE_INCOMING_CONNECTIONS:
@@ -90,7 +89,6 @@ void srNetwork::rakTick(void) {
 
 				//**** custom ****
 				case ID_USER_PACKET_ENUM:
-					cout << "rakTick: OwnPackage income." << endl;
 					rakNetRead(rakPacket);
 				break;
 
@@ -107,36 +105,37 @@ void srNetwork::rakTick(void) {
 }
 
 void srNetwork::rakNetRead(RakNet::Packet *packet) {
-	std::stringstream tmpMessage;
-	int messageType=0;
-	unsigned char systemType=0;
-	RakNet::RakString tmpStr;
+	if(rakInitiated) {
+		std::stringstream tmpMessage;
+		int messageType=0;
+		unsigned char systemType=0;
+		RakNet::RakString tmpStr;
 
-	// start reading
-	RakNet::BitStream myBitStream(packet->data, packet->length, false);
-	myBitStream.Read(systemType); // allways 77=ID_USER_PACKET_ENUM
-	myBitStream.Read(messageType);
+		// start reading
+		RakNet::BitStream myBitStream(packet->data, packet->length, false);
+		myBitStream.Read(systemType); // allways 77=ID_USER_PACKET_ENUM
+		myBitStream.Read(messageType);
 
-	switch(messageType) {
+		switch(messageType) {
 
-		case PING:
-			cout << "rakNetRead: got PING." << endl;
-			rakNetSend(PONG, rakPacket->systemAddress);
-			if(rakIsServer) clients[packet->systemAddress].cntLaag = 0;
-		break;
+			case PING:
+				rakNetSend(PONG, rakPacket->systemAddress);
+				if(rakIsServer) clients[packet->systemAddress].cntLaag = 0;
+			break;
 
-		case PONG:
-			cout << "rakNetRead: got PONG." << endl;
-		break;
+			case PONG:
+				//cout << "rakNetRead: got PONG." << endl;
+			break;
 
-		default:
-			cout << "rakNetRead: unknown '" << (int)messageType << endl;
-		break;
+			default:
+				cout << "rakNetRead: unknown '" << (int)messageType << endl;
+			break;
+		}
 	}
 }
 
 void srNetwork::rakNetSend(int messageType, RakNet::SystemAddress address) {
-	if(rakIsServer || rakConnected) {
+	if(rakInitiated) {
 		std::stringstream tmpMessage;
 		unsigned char systemType=ID_USER_PACKET_ENUM;
 		PacketPriority Priority=LOW_PRIORITY;
@@ -148,12 +147,10 @@ void srNetwork::rakNetSend(int messageType, RakNet::SystemAddress address) {
 		switch(messageType) {
 
 			case PING:
-				cout << "rakNetSend: send PING." << endl;
 				Priority=HIGH_PRIORITY;
 			break;
 
 			case PONG:
-				cout << "rakNetSend: send PONG." << endl;
 				Priority=HIGH_PRIORITY;
 			break;
 
@@ -163,7 +160,7 @@ void srNetwork::rakNetSend(int messageType, RakNet::SystemAddress address) {
 		}
 
 		// Senden
-		rakPeer->Send(myBitStream, Priority, RELIABLE, 0, address, false);
+		rakPeer->Send(myBitStream, Priority, RELIABLE, 0, address, true);
 	}
 }
 

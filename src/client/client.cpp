@@ -196,7 +196,7 @@ void client::tickRuntime(void) {
         runtimeCount++;
 
         // network keep alive ping
-        //rakNetAliasPing();
+        rakNetAliasPing();
 
         // adjust the runtimeSleep time and free CPU (TODO-1: make in formular like x^2*5)
         int temp=runtimeOptimumFPS-runtimeFpsSmooth;

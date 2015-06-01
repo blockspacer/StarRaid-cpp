@@ -103,9 +103,6 @@ class srNetwork {;
 		/// This is var is a RagNet package that is use quite often
 		RakNet::Packet *rakPacket;
 
-		/// Server address for the client
-		RakNet::SystemAddress rakServerAddress;
-
 		/// This map stores all connected clients
 		map<RakNet::SystemAddress, srNetworkClient> clients;
 };
