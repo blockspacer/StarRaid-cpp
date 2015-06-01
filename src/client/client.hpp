@@ -42,14 +42,16 @@
 
 #include "../srTypes.hpp"
 #include "../srConfig.hpp"
+#include "../srNetwork.hpp"
 
 #include "gfxImage.hpp"
 #include "gfxSystem.hpp"
 
+
 using namespace std;
 
 /// Main engine that runns the Client
-class client : public srTypes {
+class client : public srTypes, srNetwork {
 
 	public:
 

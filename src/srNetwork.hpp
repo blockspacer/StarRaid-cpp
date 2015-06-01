@@ -33,10 +33,15 @@
 //#include <unistd.h> //usleep
 #include <stdio.h>
 #include <string.h>
-//#include "RakPeerInterface.h"
-//#include "MessageIdentifiers.h"
-//#include "BitStream.h"
-//#include "RakNetTypes.h"
+#include <string>
+
+#include "MessageIdentifiers.h"
+#include "RakPeerInterface.h"
+#include "RakNetTypes.h"
+#include "BitStream.h"
+
+
+using namespace std;
 
 /**
  * Does all the network communication and holds the serializing bitstream functionality
@@ -45,6 +50,19 @@ class srNetwork {;
     public:
         srNetwork();
         ~srNetwork();
+
+        void rakInit(bool isServer);
+
+    private:
+
+    	/// Remembers tsated state
+    	bool rakInitiated;
+
+		/// This is the RakNet connection element
+		RakNet::RakPeerInterface* rakPeer;
+
+		/// This is var is a RagNet package that is use quite often
+		RakNet::Packet *rakPacket;
 };
 
 #endif // SRNETWORK_H

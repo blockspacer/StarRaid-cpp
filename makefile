@@ -1,13 +1,15 @@
+# RakNET: -lpthread -lrt
+
 CC=g++ 
-CFLAGS= -c
-LDFLAGS_CLIENT = `sdl-config --cflags --libs` -lSDL_ttf -lSDL_gfx -lSDL_image
-LDFLAGS_SERVER = `mysql_config --cflags --libs` -lSDL
+CFLAGS= -c -Isrc/raknet
+LDFLAGS_CLIENT = `sdl-config --cflags --libs` -lSDL_ttf -lSDL_gfx -lSDL_image -Llib/ -lpthread -lrt
+LDFLAGS_SERVER = `mysql_config --cflags --libs` -lSDL -Llib/ -lpthread -lrt
 
 #npc client
 all: server client
 
 ### Server TARGET
-SERVER_FILES = $(shell ls src/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' ) $(shell ls src/server/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' )
+SERVER_FILES = $(shell ls src/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' ) $(shell ls src/server/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' )  lib/libRakNetLibStatic.a
 server: $(SERVER_FILES)
 	$(CC) $(SERVER_FILES) -o bin/server.bin $(LDFLAGS_SERVER)
 
@@ -26,7 +28,7 @@ lib/server/database.o: src/server/database.cpp
 
 
 ### Client TARGET
-CLIENT_FILES = $(shell ls src/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' ) $(shell ls src/client/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' )
+CLIENT_FILES = $(shell ls src/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' ) $(shell ls src/client/*.cpp | sed 's/cpp/o/g' | sed 's/src/lib/g' ) lib/libRakNetLibStatic.a
 client: $(CLIENT_FILES)
 	$(CC) $(CLIENT_FILES) -o bin/client.bin $(LDFLAGS_CLIENT)
 

@@ -46,9 +46,9 @@ vector<srObject> database::loadObjects(void) {
 		// load incremental or inicial if server just started
 		sqlCommand = "SELECT id, character_id, type_id, status, x, y, name FROM objects ";
 		if(mysql_query(sqlSocket, sqlCommand.c_str())==0) {
-			res = mysql_store_result(sqlSocket);            // get result
-			while((row = mysql_fetch_row(res)) != NULL) { // grap row
-				tmpObject.handle       = atoi(row[0]);   // unique from auto_id field
+			res = mysql_store_result(sqlSocket);			// get result
+			while((row = mysql_fetch_row(res)) != NULL) {	// grap row
+				tmpObject.handle       = atoi(row[0]);		// unique from auto_id field
 				tmpObject.character_id = atoi(row[1]);
 				tmpObject.type         = atoi(row[2]);
 				tmpObject.status       = atoi(row[3]);

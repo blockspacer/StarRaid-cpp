@@ -24,6 +24,9 @@ server::server(string pPath) {
 	timers.addTimer("tenth",   100); //  10 times per second
 	timers.addTimer("100th",    10); // 100 times per second
 
+	// start network
+	rakInit(true);
+
 	logfile << "OK" << endl;
 }
 

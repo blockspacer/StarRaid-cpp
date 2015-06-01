@@ -30,6 +30,10 @@ client::client() {
     runtimeDelta=0;
     runtimeTime=0;
     runtimeOptimumFPS=60;
+
+    // start network
+    rakInit(false);
+
 }
 
 
