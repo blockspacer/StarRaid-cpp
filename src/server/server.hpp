@@ -41,14 +41,13 @@
 #include "database.hpp"
 
 #include "../srTimer.hpp"
-#include "../srTypes.hpp"
 #include "../srConfig.hpp"
 #include "../srNetwork.hpp"
 
 
 using namespace std;
 
-class server : public srTypes, srNetwork {
+class server : public srNetwork {
 
 	private:
 		long runtime;	//!< In var count up every second and contains the runtime

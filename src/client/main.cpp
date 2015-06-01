@@ -42,7 +42,6 @@ int main(int argc, char *argv[]) {
     /// init the engine
     myClient.init("client.xml");
 
-
     int end=0;
     while(end==0)  {
 

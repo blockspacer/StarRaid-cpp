@@ -1,7 +1,7 @@
 # RakNET: -lpthread -lrt
 
 CC=g++ 
-CFLAGS= -c -Isrc/raknet
+CFLAGS= -c -Isrc/raknet 
 LDFLAGS_CLIENT = `sdl-config --cflags --libs` -lSDL_ttf -lSDL_gfx -lSDL_image -Llib/ -lpthread -lrt
 LDFLAGS_SERVER = `mysql_config --cflags --libs` -lSDL -Llib/ -lpthread -lrt
 
@@ -59,14 +59,14 @@ lib/client/gfxFont.o: src/client/gfxFont.cpp
 lib/srNetwork.o: src/srNetwork.cpp
 	$(CC) $(CFLAGS) src/srNetwork.cpp -o lib/srNetwork.o
 
+lib/srNetworkClient.o: src/srNetworkClient.cpp
+	$(CC) $(CFLAGS) src/srNetworkClient.cpp -o lib/srNetworkClient.o
+
 lib/srTimer.o: src/srTimer.cpp
 	$(CC) $(CFLAGS) src/srTimer.cpp -o lib/srTimer.o
 
 lib/srConfig.o: src/srConfig.cpp
 	$(CC) $(CFLAGS) src/srConfig.cpp -o lib/srConfig.o
-
-lib/srTypes.o: src/srTypes.cpp
-	$(CC) $(CFLAGS) src/srTypes.cpp -o lib/srTypes.o
 
 lib/srObject.o: src/srObject.cpp
 	$(CC) $(CFLAGS) src/srObject.cpp -o lib/srObject.o

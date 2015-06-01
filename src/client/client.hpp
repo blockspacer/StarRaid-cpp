@@ -40,7 +40,6 @@
 #include <cstdio>
 #include "SDL/SDL.h"
 
-#include "../srTypes.hpp"
 #include "../srConfig.hpp"
 #include "../srNetwork.hpp"
 
@@ -51,7 +50,7 @@
 using namespace std;
 
 /// Main engine that runns the Client
-class client : public srTypes, srNetwork {
+class client : public srNetwork {
 
 	public:
 

@@ -48,6 +48,9 @@ void server::tick(void) {
 		lps = 0;
 		dps = 0;
 		logfile << "[Tick-" << runtime << "] fps: " << fpsSmooth << ", lps: " << lpsSmooth << ", dps: " << dpsSmooth << endl;
+
+		// check on network connections
+		rakNetCheckClients();
 	}
 
 	// 10x second
@@ -60,6 +63,8 @@ void server::tick(void) {
 		//
 	}
 
+	// poll for network events
+	rakTick();
 
 	// sleep a micro second, about 10000 ticks/second
 	usleep(1);

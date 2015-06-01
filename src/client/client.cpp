@@ -1,7 +1,6 @@
 #include "client.hpp"
 
 client::client() {
-
     mouseX = 0;
     mouseY = 0;
     mouseZ = 0;
@@ -30,17 +29,11 @@ client::client() {
     runtimeDelta=0;
     runtimeTime=0;
     runtimeOptimumFPS=60;
-
-    // start network
-    rakInit(false);
-
 }
-
 
 client::~client() {
     //
 }
-
 
 void client::init(string pPath) {
     config.load(pPath);
@@ -48,8 +41,11 @@ void client::init(string pPath) {
     screenResY = config.getValueInt("ResolutionY", 480);
     screenFull = config.getValueInt("ResolutionFullscreen", 0);
     screenDepth = config.getValueInt("ResolutionDepth", 32);
-}
 
+    // start network
+    rakInit(false);
+    rakConnect("127.0.0.1");
+}
 
 void client::initGFX(void) {
 
@@ -79,9 +75,7 @@ void client::initGFX(void) {
 
     // load images & precalculate menues aso.
     gfxSystem::instance()->init(screenResX, screenResY);
-
 }
-
 
 bool client::run(void) {
 
@@ -143,7 +137,6 @@ bool client::run(void) {
     }
 }
 
-
 void client::tick(void) {
     runtimeFlops++;
 
@@ -182,6 +175,8 @@ void client::tick(void) {
     memMouseX = mouseX;
     memMouseY = mouseY;
 
+    // poll the network buffer
+    rakTick();
 
     // only draw when chnaged flag is set, otherwise just once a sec
     if(render) draw();
@@ -192,13 +187,16 @@ void client::tick(void) {
 
 void client::tickRuntime(void) {
     int currentTime = (uintmax_t)time(NULL);
-    if(runtimeTime != currentTime) {
+    if(runtimeTime != currentTime) { // every second
         runtimeTime = currentTime;
         runtimeFpsSmooth = runtimeFlops;
         runtimeRenderSmooth = runtimeRenders;
         runtimeFlops = 0;
         runtimeRenders = 0;
         runtimeCount++;
+
+        // network keep alive ping
+        //rakNetAliasPing();
 
         // adjust the runtimeSleep time and free CPU (TODO-1: make in formular like x^2*5)
         int temp=runtimeOptimumFPS-runtimeFpsSmooth;

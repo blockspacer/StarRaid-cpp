@@ -30,10 +30,13 @@
 #define SRNETWORK_H
 
 
-//#include <unistd.h> //usleep
 #include <stdio.h>
 #include <string.h>
 #include <string>
+#include <iostream>
+#include <sstream>
+
+#include "srNetworkClient.hpp"
 
 #include "MessageIdentifiers.h"
 #include "RakPeerInterface.h"
@@ -47,22 +50,64 @@ using namespace std;
  * Does all the network communication and holds the serializing bitstream functionality
  */
 class srNetwork {;
-    public:
-        srNetwork();
-        ~srNetwork();
+	public:
+		srNetwork();
+		~srNetwork();
 
-        void rakInit(bool isServer);
+		// basics
+		void rakInit(bool isServer);
+		void rakConnect(string pHost);
+		void rakTick(void);
+		void rakNetRead(RakNet::Packet *packet);
+		void rakNetSend(int messageType, RakNet::SystemAddress adress);
+		void rakNetCheckClients(void);
+		void rakNetClientAdd(RakNet::Packet *packet);
+		void rakNetClientTerminate(RakNet::SystemAddress address);
 
-    private:
+		// alias functions
+		void rakNetAliasPing(void);
 
-    	/// Remembers tsated state
-    	bool rakInitiated;
+	private:
+
+		/// The enum of all the network message types
+		enum netMessageType {
+			PING,                 //!< will request a PONG response
+			PONG,                 //!< answer to the PING request
+			VERSION_ASK,          //!< ask for the version
+			VERSION_ANSWER,       //!< answer the version number
+			LOGIN_ASK,            //!< ask for login
+			LOGIN_ANSWER,         //!< answer with login details (name, pass)
+			OBJ_BEACON,           //!< has basic object infos, like pos, type, name, id
+			OBJ_SELF,             //!< same as beacon but for the object to itself
+			CMD_MOVE,             //!< tells where a move_to click was pointed to
+			DETAILS_ASK,          //!< ask for more details about an object
+			DETAILS_ANSWER,       //!< gives more details about an object depending how much the requester is allowed to see
+			TERMINATE,            //!< ask the client to terminate itself
+			CHAT,                 //!< a chat message send my client, server adds the sender info and send to others back
+			OBJ_TYPE,             //!< send a objectType tp the client
+			ACTION                //!< ACTION: a basic shot (server will answer with details of involved objects)
+		}; // if new is added, DONT forget the constructor and add the char translation to it
+
+		/// App type
+		bool rakIsServer;
+
+		/// Remembers iniciated state
+		bool rakInitiated;
+
+		/// Remembers connected state
+		bool rakConnected;
 
 		/// This is the RakNet connection element
 		RakNet::RakPeerInterface* rakPeer;
 
 		/// This is var is a RagNet package that is use quite often
 		RakNet::Packet *rakPacket;
+
+		/// Server address for the client
+		RakNet::SystemAddress rakServerAddress;
+
+		/// This map stores all connected clients
+		map<RakNet::SystemAddress, srNetworkClient> clients;
 };
 
 #endif // SRNETWORK_H
