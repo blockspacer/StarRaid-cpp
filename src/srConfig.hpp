@@ -73,10 +73,10 @@ class srConfig {
         map<string, string> cache;
 
         /// graps an interger value out of the pool
-        int getValueInt(string Key, int defaultValue);
+        int getValue(string Key, int defaultValue);
 
         /// graps a string out of the pool
-        string getValueString(string Key, string defaultValue);
+        string getValue(string Key, string defaultValue);
 
         /// check if loaded
         void isLoaded(void);

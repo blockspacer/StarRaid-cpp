@@ -14,7 +14,7 @@ server::server(string pPath) {
 
 	// timers
 	runtime=0;
-	calcDist = config.getValueInt("calcDist", 50000);
+	calcDist = config.getValue("calcDist", 50000);
 	fps = 0;
 	lps = 0;
 	dps = 0;
@@ -93,7 +93,12 @@ void server::tick(void) {
 }
 
 void server::objLoad(void) {
-	db.connect("starraid","127.0.0.1","root","","3306");
+	string name = config.getValue("Name", "starraid");
+	string user = config.getValue("User", "root");
+	string pass = config.getValue("Pass", "");
+	string host = config.getValue("Host", "127.0.0.1");
+	string port = config.getValue("Port", "3306");
+	db.connect(name,host,user,pass,port);
 	vector<srObject> tmp;
 	vector<srObject>::iterator i;
 	tmp = db.loadObjects();

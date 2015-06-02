@@ -37,10 +37,10 @@ client::~client() {
 
 void client::init(string pPath) {
     config.load(pPath);
-    screenResX = config.getValueInt("ResolutionX", 640);
-    screenResY = config.getValueInt("ResolutionY", 480);
-    screenFull = config.getValueInt("ResolutionFullscreen", 0);
-    screenDepth = config.getValueInt("ResolutionDepth", 32);
+    screenResX = config.getValue("ResolutionX", 640);
+    screenResY = config.getValue("ResolutionY", 480);
+    screenFull = config.getValue("ResolutionFullscreen", 0);
+    screenDepth = config.getValue("ResolutionDepth", 32);
 
     // start network
     rakInit(false);

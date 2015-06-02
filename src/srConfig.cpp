@@ -72,7 +72,7 @@ void srConfig::init(bool flagDebuging) {
  *   @param Key The key-string
  *   @param defaultValue if the key is not found, it will return the default value
  */
-int srConfig::getValueInt(string Key, int defaultValue) {
+int srConfig::getValue(string Key, int defaultValue) {
 	isLoaded();
 	map<string, string>::iterator i = cache.find(Key);
 	if(i == cache.end()) {
@@ -86,7 +86,7 @@ int srConfig::getValueInt(string Key, int defaultValue) {
  *   @param Key The key-string
  *   @param defaultValue if the key is not found, it will return the default value
  */
-string srConfig::getValueString(string Key, string defaultValue) {
+string srConfig::getValue(string Key, string defaultValue) {
 	isLoaded();
 	map<string, string>::iterator i = cache.find(Key);
 	if(i == cache.end()) {
