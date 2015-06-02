@@ -1,6 +1,6 @@
 # A key value based config, all keys defined here are overwriting the default values
 User=xuedi
-Pass=member
+Pass=1234
 Server=127.0.0.1
 Debug=1
 ResolutionX=640

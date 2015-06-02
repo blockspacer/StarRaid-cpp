@@ -61,6 +61,7 @@ class server : public srNetwork {
 			dpsSmooth;  //!< Is the smothen networkdelivery per second
 		int sysBreak,	//!< This is a very important var, it adjust the amount of time giving back to the operating system
 			sysNoise;
+		int calcDist;	//!< how far the calculation should grep (CPU)
 
 	   srTimer timers;
 	   database db;

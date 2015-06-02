@@ -1,2 +1,6 @@
 # A key value based config, all keys defined here are overwriting the default values
-Server=127.0.0.1
+calcDist=50000
+User=username
+Pass=pass
+Host=127.0.0.1
+Post=3306

@@ -14,6 +14,7 @@ server::server(string pPath) {
 
 	// timers
 	runtime=0;
+	calcDist = config.getValueInt("calcDist", 50000);
 	fps = 0;
 	lps = 0;
 	dps = 0;
@@ -84,6 +85,7 @@ void server::tick(void) {
 	// poll for network events
 	rakTick();
 
+	// main calculation (ext to network distribution)
 	objLoop();
 
 	// sleep a micro second, about 10000 ticks/second
@@ -130,7 +132,7 @@ void server::objLoop(void) {
 			xd = objects[handle].x - (*f).second.x;
 			yd = objects[handle].y - (*f).second.y;
 			dist = sqrt(xd*xd + yd*yd);
-			if(dist<=50000) { ///TODO: adjust by config and dynamic calc prognosis
+			if(dist<=calcDist) { ///TODO: adjust by config and dynamic calc prognosis
 				objects[handle].neighbours.push_back((*f).second.handle);
 			}
 		}
