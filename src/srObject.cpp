@@ -1,13 +1,17 @@
 #include "srObject.hpp"
 
 srObject::srObject() {
+    queCnt = 0;
+    queCntBig = 0;
+    queCntBigMax = rand() % 150 + 100;
+
     handle = 0;
     type = 0;
+    owner = 0;
     status = 0;
     name = "";
     x = 0;
     y = 0;
-    character_id = 0;
 }
 
 srObject::~srObject() {

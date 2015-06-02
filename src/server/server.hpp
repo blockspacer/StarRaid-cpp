@@ -55,6 +55,8 @@ class server : public srNetwork {
 			fpsSmooth;  //!< The secondly result of fps is bufferd here
 		int lps,        //!< This var counts calculation loop
 			lpsSmooth;  //!< The secondly result of lps is bufferd here
+		int blps,		//!< Count the big loop per second
+			blpsSmooth;	//!< The secondly result of blps is bufferd here
 		int dps,        //!< Counts the network deliveries
 			dpsSmooth;  //!< Is the smothen networkdelivery per second
 		int sysBreak,	//!< This is a very important var, it adjust the amount of time giving back to the operating system
@@ -66,14 +68,18 @@ class server : public srNetwork {
 	public:
 		server(string pPath);
 		~server();
-		void tick(void);
-		void loadObjects(void);
 
+		//### main logic
+		void tick(void);
+
+		//### object handling
+		void objLoad(void);
+		void objLoop(void);
+		map<long, srObject> objects;
+
+		//### other stuff
 		ofstream logfile;
 		srConfig config;
-
-		/// game objects
-		map<long, srObject> objects;
 };
 
 #endif // SERVER_H

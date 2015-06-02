@@ -54,6 +54,9 @@ class srNetwork {;
 		srNetwork();
 		~srNetwork();
 
+		int rakTx,	//!< counts the send per second
+			rakRx;	//!< counts the recive per second
+
 		// basics
 		void rakInit(bool isServer);
 		void rakConnect(string pHost);

@@ -7,6 +7,8 @@ srNetwork::srNetwork() {
 	rakIsServer = false;
 	rakInitiated = false;
 	rakConnected = false;
+	rakTx = 0;
+	rakRx = 0;
 }
 
 srNetwork::~srNetwork() {
@@ -106,6 +108,7 @@ void srNetwork::rakTick(void) {
 
 void srNetwork::rakNetRead(RakNet::Packet *packet) {
 	if(rakInitiated) {
+		rakRx++;
 		std::stringstream tmpMessage;
 		int messageType=0;
 		unsigned char systemType=0;
@@ -136,6 +139,7 @@ void srNetwork::rakNetRead(RakNet::Packet *packet) {
 
 void srNetwork::rakNetSend(int messageType, RakNet::SystemAddress address) {
 	if(rakInitiated) {
+		rakTx++;
 		std::stringstream tmpMessage;
 		unsigned char systemType=ID_USER_PACKET_ENUM;
 		PacketPriority Priority=LOW_PRIORITY;

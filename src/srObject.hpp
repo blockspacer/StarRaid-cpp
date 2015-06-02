@@ -48,47 +48,46 @@ using namespace std;
 class srObject {
 
 
-    public:
-        srObject();
-        virtual ~srObject();
+	public:
+		srObject();
+		virtual ~srObject();
+
+		//### runtime ###
+		long queCnt;		//!< Add every big loop, until item is processed
+		int queCntBig;		//!> The number of time this item was proccessed (for big one)
+		int queCntBigMax;	//!> The number of time this item was proccessed (for big one)
+
+		/// the game relevant game neighbours around the object
+		vector<long> neighbours;
+
+		//### basics ###
+		long handle;	//!< The unique handle to identify the object
+		int type;		//!< The type of the object (main class)
+		int status;		//!< The status of the object (destroyes, active and so on)
+		int owner;		//!< The controlling player/npc
+		string name;	//!< The name of the object
+		
+		long x, //!< Its position on the x axis
+			 y; //!< Its position on the y axis
 
 
-        /// the unique handle to identify the object
-        long handle;
+		//### stats ###
+		int shield,		//!< Shield
+			health,		//!< Health
+			scanner,	//!< Scanner
+			jammer;		//!< Jammer
 
-        /// the type of the object
-        int type;
+		/// add cargo
+		void cargoAdd(string pType, int pAmount);
 
-        /// the status of the object (destroyes, active and so on)
-        int status;
+		/// get cargo
+		int cargoGet(string pType);
 
-        /// The name of the object
-        string name;
+	private:
 
-
-        long x, //!< Its position on the x axis
-             y; //!< Its position on the y axis
-
-        /// the character that is controlling this object (should be moved to server)
-        int character_id;
-
-        //////////////////////// BASE Attributes ////////////////////////
-        int shield,     //!< Shield
-            health,     //!< Health
-            scanner,    //!< Scanner
-            jammer;     //!< Jammer
-
-        /// add cargo
-        void cargoAdd(string pType, int pAmount);
-
-        /// get cargo
-        int cargoGet(string pType);
-
-    private:
-
-        /// cargo pool
-        vector<srCargo> cargo;
-        vector<srCargo>::iterator cargoIterator;
+		/// cargo pool
+		vector<srCargo> cargo;
+		vector<srCargo>::iterator cargoIterator;
 
 
 };
