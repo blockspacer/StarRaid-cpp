@@ -1,6 +1,7 @@
 # A key value based config, all keys defined here are overwriting the default values
 calcDist=50000
+Name=database
 User=username
-Pass=pass
+Pass=password
 Host=127.0.0.1
-Post=3306
+Port=3306
