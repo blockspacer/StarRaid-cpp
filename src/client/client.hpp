@@ -83,6 +83,9 @@ class client {
 		/// Draw the screen
 		void draw(void);
 
+		/// Draw the screen
+		void drawGfx(void);
+
  
 	private:
 

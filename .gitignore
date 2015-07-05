@@ -1,6 +1,6 @@
 bin/*.bin
 bin/*.log
-bin/GFX/
+bin/GFX_OLD/
 bin/client.conf
 bin/server.conf
 lib/*.o

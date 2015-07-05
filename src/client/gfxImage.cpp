@@ -36,6 +36,14 @@ SDL_Surface* gfxImage::getSurface(int pNumber) {
 }
 
 /**
+ * Log description
+ */
+SDL_Surface* gfxImage::getSurface(void) {
+    surfacePoolIterator i = surfacePool.find(0);
+    return i->second;
+}
+
+/**
  * Long description
  *   @param pPath The location of the image to load
  *   @param numberRotated The number of rotated surfaces to create from first
@@ -206,10 +214,10 @@ void gfxImage::create(int x, int y) {
 void gfxImage::update(void) {
 
     // image itself
-    width = (int)getSurface(0)->w;     //TODO-0: use surface.begin() or so
-    heigth = (int)getSurface(0)->h;
+    width = (int)getSurface()->w;     //TODO-0: use surface.begin() or so
+    height = (int)getSurface()->h;
     widthHalf = (int)width/2;
-    heigthHalf = (int)heigth/2;
+    heightHalf = (int)height/2;
 }
 
 
@@ -233,18 +241,10 @@ void gfxImage::setDefaultPositions(int x, int y) {
  *   @param flagDefault If set it will take it own saved positions, usefull for static positions
  *   @param surfaceNumber The number of the image in the pool
  */
-void gfxImage::drawCentered(SDL_Surface *target, int x, int y, bool flagDefault, int surfaceNumber) {
-
-    // set default if nothing is set
-    if(flagDefault) {
-        x = defaultX;
-        y = defaultY;
-    }
+void gfxImage::drawCentered(SDL_Surface *target, int x, int y, int surfaceNumber) {
     x -= widthHalf;
-    y -= heigthHalf;
-
-    draw(target,x,y,0,surfaceNumber);
-
+    y -= heightHalf;
+    draw(target,x,y,surfaceNumber);
 }
 
 
@@ -256,19 +256,10 @@ void gfxImage::drawCentered(SDL_Surface *target, int x, int y, bool flagDefault,
  *   @param flagDefault If set it will take it own saved positions, usefull for static positions
  *   @param surfaceNumber The number of the image in the pool
  */
-void gfxImage::draw(SDL_Surface *target, int x, int y, bool flagDefault, int surfaceNumber) {
-
+void gfxImage::draw(SDL_Surface *target, int x, int y, int surfaceNumber) {
     if(flagInit==1) {
-
         // if the wished surface doesn exist give default
 //        if(surfaceLoaded<surfaceNumber) surfaceNumber = 0;
-
-
-        // set default if nothing is set
-        if(flagDefault) {
-            x = defaultX;
-            y = defaultY;
-        }
 
 //        SDL_BlitSurface(getSurface(surfaceNumber), NULL, target, &(SDL_Rect){x,y,0,0} );
         SDL_Rect tmpRect = {x,y,0,0};
@@ -289,8 +280,8 @@ void gfxImage::draw(SDL_Surface *target, int x, int y, bool flagDefault, int sur
  *   @param y The y position
  *   @param flagDefault If set it will take it own saved positions, usefull for static positions
  */
-void gfxImage::draw(SDL_Surface *target, int x, int y, bool flagDefault) {
-    draw(target, x, y, flagDefault, 0);
+void gfxImage::draw(SDL_Surface *target, int x, int y) {
+    draw(target, x, y, 0);
 }
 
 
@@ -298,6 +289,6 @@ void gfxImage::draw(SDL_Surface *target, int x, int y, bool flagDefault) {
  * Long description
  *   @param target The system SDL surface into wich is drawn
  */
-void gfxImage::drawDefault(SDL_Surface *target) {
-    draw(target, 0, 0, 1, 0);
+void gfxImage::draw(SDL_Surface *target) {
+    draw(target, defaultX, defaultY, 0);
 }

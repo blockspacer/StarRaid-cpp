@@ -76,23 +76,24 @@ class gfxImage : public sdlHelper {
         void setDefaultPositions(int x, int y);
 
         /// Simpla draw on the default position
-        void drawDefault(SDL_Surface *target);
+        void draw(SDL_Surface *target);
 
         /// Draw the first image of the pool
-        void draw(SDL_Surface *target, int x, int y, bool flagDefault);
+        void draw(SDL_Surface *target, int x, int y);
 
         /// Draw a specific image out of the pool
-        void draw(SDL_Surface *target, int x, int y, bool flagDefault, int surfaceNumber);
+        void draw(SDL_Surface *target, int x, int y, int surfaceNumber);
 
         /// Draw a an image from the center
-        void drawCentered(SDL_Surface *target, int x, int y, bool flagDefault, int surfaceNumber);
+        void drawCentered(SDL_Surface *target, int x, int y, int surfaceNumber);
 
         //void deleteSurface(void);
 
         /// This method returns the selected image from the pool
         SDL_Surface* getSurface(int pNumber);
 
-//        SDL_Surface *surface;
+        /// This method returns the selected image from the pool
+        SDL_Surface* getSurface(void);
 
         /// This is the surface pool
         map<int,SDL_Surface*> surfacePool;
@@ -100,14 +101,14 @@ class gfxImage : public sdlHelper {
         /// Preproccesed value, holds the width
         int width;
 
-        /// Preproccesed value, holds the heigth
-        int heigth;
+        /// Preproccesed value, holds the height
+        int height;
 
         /// Preproccesed value, holds the half width
         int widthHalf;
 
-        /// Preproccesed value, holds the half heigth
-        int heigthHalf;
+        /// Preproccesed value, holds the half height
+        int heightHalf;
 
         /// The default X positions of the image
         int defaultX;

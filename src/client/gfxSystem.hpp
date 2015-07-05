@@ -79,10 +79,6 @@ class gfxSystem : public sdlHelper {
 		/// Sets a few internal options
 		void init(int resX, int resY);
 
-		/// request a surface
-		gfxImage* getSurface(string pKey);
-
-
 
 		// Main ressources
 		gfxImage *sfNone;
@@ -120,11 +116,18 @@ class gfxSystem : public sdlHelper {
 		/// Contains a Arial12 font
 		gfxFont *fontArial18;
 
-	protected:
-	private:
+		/// Draw a surface out of the pool
+		void poolAdd(string pName, string pFileName);
 
 		/// Draw a surface out of the pool
-		void addToPool(string pName, string pFileName, int pRotate);
+		void poolAdd(string pName, string pFileName, int pRotate);
+
+		/// request a surface
+		gfxImage* poolGet(string pKey);
+
+
+	protected:
+	private:
 
 		// type to make the code more clean
 		typedef std::pair<string, gfxImage*> gfxPoolPair;               //!< The Pair for the gfxPool

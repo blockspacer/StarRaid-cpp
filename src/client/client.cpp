@@ -15,8 +15,8 @@ client::client() {
     render=1;
 
     screen = NULL;
-    screenResX = 800;
-    screenResY = 600;
+    screenResX = 1024;
+    screenResY = 768;
     screenFull = 0;
     screenDepth = 32;
 
@@ -120,8 +120,8 @@ bool client::run(void) {
                     break;
 
                     case SDLK_3:
-                        screenResX=1440;
-                        screenResY=900;
+                        screenResX=1920;
+                        screenResY=1080;
                         screenFull=1;
                         render=1;
                         return false;
@@ -240,11 +240,23 @@ void client::draw(void) {
     gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 85, "Delta: ", runtimeDelta);
     gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 100, "Sleep: ", runtimeSleep);
 
+    // draw other objects
+    drawGfx();
+
     // show new render
     SDL_Flip(screen);
 
     render=0;
     runtimeRenders++;
+}
+
+void client::drawGfx(void) {
+
+    // fixed elements
+    gfxSystem::instance()->poolGet("radar")->draw(screen);
+
+    // menu
+    gfxSystem::instance()->sfMenue->draw(screen);
 }
 
 void client::netTick(void) {
