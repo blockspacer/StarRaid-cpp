@@ -82,32 +82,11 @@ class gfxSystem : public sdlHelper {
 
 		// Main ressources
 		gfxImage *sfNone;
-
-		gfxImage *sfRadarSpotNeutralSmall;      //!< The image for the sfRadarSpotNeutralSmall
-		gfxImage *sfMessageWindow;              //!< The image for the sfMessageWindow
-		gfxImage *sfMouseSpot;                  //!< Will be displayed when there was a movement click
-		gfxImage *sfStarBig, *sfStarMiddle, *sfStarSmall;
-		gfxImage *sfMenue,                      //!< The image for the sfMenue
-				 *sfMenueBG,                    //!< The image for the sfMenueBG
-				 *sfMenueLogo,                  //!< The image for the sfMenueLogo
-				 *sfMenueActive,                //!< The image for the sfMenueActive
-				 *sfMenuePassive,               //!< The image for the sfMenuePassive
-				 *sfMenueBottom,                //!< The image for the sfMenueBottom
-				 *sfMenueBorder;                //!< The image for the sfMenueBorder
-		gfxImage *sfWinDecoBrownMenue,          //!< The image for the sfWinDecoBrownMenue
-				 *sfWinDecoBrownResize,         //!< The image for the sfWinDecoBrownResize
-				 *sfWinDecoBrownBackground,     //!< The image for the sfWinDecoBrownBackground
-				 *sfWinDecoBrownTopLeft,        //!< The image for the sfWinDecoBrownTopLeft
-				 *sfWinDecoBrownTopMiddle,      //!< The image for the sfWinDecoBrownTopMiddle
-				 *sfWinDecoBrownTopRight,       //!< The image for the sfWinDecoBrownTopRight
-				 *sfWinDecoBrownBottomLeft,     //!< The image for the sfWinDecoBrownBottomLeft
-				 *sfWinDecoBrownBottomMiddle,   //!< The image for the sfWinDecoBrownBottomMiddle
-				 *sfWinDecoBrownBottomRight,    //!< The image for the sfWinDecoBrownBottomRight
-				 *sfWinDecoBrownMiddleLeft,     //!< The image for the sfWinDecoBrownMiddleLeft
-				 *sfWinDecoBrownMiddleRight,    //!< The image for the sfWinDecoBrownMiddleRight
-				 *sfWinDecoBrownTextInputLeft,  //!< The image for the sfWinDecoBrownTextInputLeft
-				 *sfWinDecoBrownTextInputMiddle,//!< The image for the sfWinDecoBrownTextInputMiddle
-				 *sfWinDecoBrownTextInputRight; //!< The image for the sfWinDecoBrownTextInputRight
+		gfxImage *sfMenue;
+		gfxImage *sfMsg;
+//		gfxImage *sfRadarSpotNeutralSmall;
+//		gfxImage *sfMouseSpot;
+//		gfxImage *sfStarBig, *sfStarMiddle, *sfStarSmall;
 
 
 		/// Contains a Arial12 font

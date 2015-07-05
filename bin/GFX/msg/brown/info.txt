@@ -1,0 +1,2 @@
+1) The borders are set by the Top & bottom middle part as well as the Right & left midle part.
+2) the corner must fit to the part in step 1

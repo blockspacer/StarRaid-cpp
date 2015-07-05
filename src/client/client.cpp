@@ -257,6 +257,9 @@ void client::drawGfx(void) {
 
     // menu
     gfxSystem::instance()->sfMenue->draw(screen);
+
+    // menu
+    gfxSystem::instance()->sfMsg->draw(screen);
 }
 
 void client::netTick(void) {

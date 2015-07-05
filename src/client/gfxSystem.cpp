@@ -8,6 +8,7 @@ gfxSystem::gfxSystem() {
 
     sfNone = new gfxImage;
     sfMenue = new gfxImage;
+    sfMsg = new gfxImage;
 
 /*
     //ressouces
@@ -20,22 +21,8 @@ gfxSystem::gfxSystem() {
     sfStarBig = new gfxImage;
     sfStarMiddle = new gfxImage;
     sfStarSmall = new gfxImage;
-
-    sfWinDecoBrownMenue = new gfxImage;
-    sfWinDecoBrownResize = new gfxImage;
-    sfWinDecoBrownBackground = new gfxImage;
-    sfWinDecoBrownTopLeft = new gfxImage;
-    sfWinDecoBrownTopMiddle = new gfxImage;
-    sfWinDecoBrownTopRight = new gfxImage;
-    sfWinDecoBrownBottomLeft = new gfxImage;
-    sfWinDecoBrownBottomMiddle = new gfxImage;
-    sfWinDecoBrownBottomRight = new gfxImage;
-    sfWinDecoBrownMiddleLeft = new gfxImage;
-    sfWinDecoBrownMiddleRight = new gfxImage;
-    sfWinDecoBrownTextInputLeft = new gfxImage;
-    sfWinDecoBrownTextInputMiddle = new gfxImage;
-    sfWinDecoBrownTextInputRight = new gfxImage;
 */
+
     fontArial12 = new gfxFont;
     fontArial18 = new gfxFont;
 }
@@ -46,6 +33,7 @@ gfxSystem::gfxSystem() {
 gfxSystem::~gfxSystem() {
     delete sfNone;
     delete sfMenue;
+    delete sfMsg;
 
 /*
     delete sfRadarSpotNeutralSmall;
@@ -57,21 +45,6 @@ gfxSystem::~gfxSystem() {
     delete sfStarBig;
     delete sfStarMiddle;
     delete sfStarSmall;
-
-    delete sfWinDecoBrownMenue;
-    delete sfWinDecoBrownResize;
-    delete sfWinDecoBrownBackground;
-    delete sfWinDecoBrownTopLeft;
-    delete sfWinDecoBrownTopMiddle;
-    delete sfWinDecoBrownTopRight;
-    delete sfWinDecoBrownBottomLeft;
-    delete sfWinDecoBrownBottomMiddle;
-    delete sfWinDecoBrownBottomRight;
-    delete sfWinDecoBrownMiddleLeft;
-    delete sfWinDecoBrownMiddleRight;
-    delete sfWinDecoBrownTextInputLeft;
-    delete sfWinDecoBrownTextInputMiddle;
-    delete sfWinDecoBrownTextInputRight;
 */
     delete fontArial12;
     delete fontArial18;
@@ -118,6 +91,11 @@ void gfxSystem::poolAdd(string pName, string pFileName) {
  */
 void gfxSystem::createMenue(int resX, int resY) {
 
+    delete sfMenue;
+    sfMenue = new gfxImage;
+    sfMenue->create(35,resY);
+    sfMenue->setDefaultPositions(0,0);
+
     int i;
     SDL_Rect tmpRect;
 
@@ -148,53 +126,57 @@ void gfxSystem::createMenue(int resX, int resY) {
  *   @param msgWinH The height of the message window
  */
 void gfxSystem::createMsgWindow(int resX, int resY, int msgWinW, int msgWinH) {
-/*
+
+    delete sfMsg;
+    sfMsg = new gfxImage;
+    sfMsg->create(msgWinW,msgWinH);
+    sfMsg->setDefaultPositions(resX-msgWinW-20,resY-msgWinH);
+
     int i,e;
     SDL_Rect tmpRect;
 
     int borderTop, borderBottom, borderLeft, borderRight;
-    borderTop=sfWinDecoBrownTopMiddle->heigth,
-    borderBottom=sfWinDecoBrownBottomMiddle->heigth;
-    borderLeft=sfWinDecoBrownMiddleLeft->width,
-    borderRight=sfWinDecoBrownMiddleRight->width;
+    borderTop = poolGet("msg_top_middle")->height,
+    borderBottom = poolGet("msg_bottom_middle")->height;
+    borderLeft = poolGet("msg_middle_left")->width,
+    borderRight = poolGet("msg_middle_right")->width;
 
     for(i=borderLeft;i<=(msgWinW-borderRight);i++) {
         tmpRect = newSDL_Rect(i,0,0,0);
-        SDL_BlitSurface(sfWinDecoBrownTopMiddle->getSurface(), NULL, sfMessageWindow->getSurface(), &tmpRect );
+        SDL_BlitSurface(poolGet("msg_top_middle")->getSurface(), NULL, sfMsg->getSurface(), &tmpRect );
     }
 
     for(i=borderTop;i<=(msgWinH);i++) {
         tmpRect = newSDL_Rect(0,i,0,0);
-        SDL_BlitSurface(sfWinDecoBrownMiddleLeft->getSurface(), NULL, sfMessageWindow->getSurface(), &tmpRect );
+        SDL_BlitSurface(poolGet("msg_middle_left")->getSurface(), NULL, sfMsg->getSurface(), &tmpRect );
     }
 
     for(i=borderTop;i<=(msgWinH);i++) {
         tmpRect = newSDL_Rect(msgWinW-borderRight,i,0,0);
-        SDL_BlitSurface(sfWinDecoBrownMiddleRight->getSurface(), NULL, sfMessageWindow->getSurface(), &tmpRect );
+        SDL_BlitSurface(poolGet("msg_middle_right")->getSurface(), NULL, sfMsg->getSurface(), &tmpRect );
     }
 
-    SDL_BlitSurface(sfWinDecoBrownTopLeft->getSurface(), NULL, sfMessageWindow->getSurface(), NULL );
+    SDL_BlitSurface(poolGet("msg_top_left")->getSurface(), NULL, sfMsg->getSurface(), NULL );
 
     tmpRect = newSDL_Rect(msgWinW-borderRight,0,0,0);
-    SDL_BlitSurface(sfWinDecoBrownTopRight->getSurface(), NULL, sfMessageWindow->getSurface(), &tmpRect );
+    SDL_BlitSurface(poolGet("msg_top_right")->getSurface(), NULL, sfMsg->getSurface(), &tmpRect );
 
     for(i=borderLeft;i<=(msgWinW-borderRight);i++) {
         for(e=borderTop;e<=(msgWinH-borderBottom);e++) {
             tmpRect = newSDL_Rect(i,e,0,0);
-            SDL_BlitSurface(sfWinDecoBrownBackground->getSurface(), NULL, sfMessageWindow->getSurface(), &tmpRect );
+            SDL_BlitSurface(poolGet("msg_background")->getSurface(), NULL, sfMsg->getSurface(), &tmpRect );
         }
     }
     for(i=borderLeft;i<=(msgWinW-borderRight);i++) {
         tmpRect = newSDL_Rect(i,msgWinH-borderBottom,0,0);
-        SDL_BlitSurface(sfWinDecoBrownTextInputMiddle->getSurface(), NULL, sfMessageWindow->getSurface(), &tmpRect );
+        SDL_BlitSurface(poolGet("msg_input_middle")->getSurface(), NULL, sfMsg->getSurface(), &tmpRect );
     }
 
     tmpRect = newSDL_Rect(4,msgWinH-borderBottom,0,0);
-    SDL_BlitSurface(sfWinDecoBrownTextInputLeft->getSurface(), NULL, sfMessageWindow->getSurface(), &tmpRect );
+    SDL_BlitSurface(poolGet("msg_input_left")->getSurface(), NULL, sfMsg->getSurface(), &tmpRect );
 
     tmpRect = newSDL_Rect(msgWinW-borderRight-4,msgWinH-borderBottom,0,0);
-    SDL_BlitSurface(sfWinDecoBrownTextInputRight->getSurface(), NULL, sfMessageWindow->getSurface(), &tmpRect );
-*/
+    SDL_BlitSurface(poolGet("msg_input_right")->getSurface(), NULL, sfMsg->getSurface(), &tmpRect );
 }
 
 
@@ -206,15 +188,6 @@ void gfxSystem::createMsgWindow(int resX, int resY, int msgWinW, int msgWinH) {
  *   @param resY The resolution height
  */
  void gfxSystem::init(int resX, int resY) {
-
-    //**** set temporary variables
-    int msgWinW,msgWinH,msgWinX,msgWinY;
-    msgWinW=200;
-    msgWinH=40+(10*15); // 10 messages
-    msgWinX=200;
-    msgWinY=resY-msgWinH+10; // the last 10 set the bottom decoration out of the screen
-
-
 
     //**** loead the grafics only once
     if(flagLoaded==0) {
@@ -238,23 +211,7 @@ void gfxSystem::createMsgWindow(int resX, int resY, int msgWinW, int msgWinH) {
         sfStarMiddle->load("GFX/bg/mapStarMiddle.bmp");
         sfStarSmall->load("GFX/bg/mapStarSmall.bmp");
 
-        sfWinDecoBrownMenue->load("GFX/windowDecorations/brown/sfMenue.bmp");
-        sfWinDecoBrownResize->load("GFX/windowDecorations/brown/sfResize.bmp");
-        sfWinDecoBrownBackground->load("GFX/windowDecorations/brown/sfBackground.bmp");
-        sfWinDecoBrownTopLeft->load("GFX/windowDecorations/brown/sfTopLeft.bmp");
-        sfWinDecoBrownTopMiddle->load("GFX/windowDecorations/brown/sfTopMiddle.bmp");
-        sfWinDecoBrownTopRight->load("GFX/windowDecorations/brown/sfTopRight.bmp");
-        sfWinDecoBrownBottomLeft->load("GFX/windowDecorations/brown/sfBottomLeft.bmp");
-        sfWinDecoBrownBottomMiddle->load("GFX/windowDecorations/brown/sfBottomMiddle.bmp");
-        sfWinDecoBrownBottomRight->load("GFX/windowDecorations/brown/sfBottomRight.bmp");
-        sfWinDecoBrownMiddleLeft->load("GFX/windowDecorations/brown/sfMiddleLeft.bmp");
-        sfWinDecoBrownMiddleRight->load("GFX/windowDecorations/brown/sfMiddleRight.bmp");
-        sfWinDecoBrownTextInputLeft->load("GFX/windowDecorations/brown/sfTextInputLeft.bmp");
-        sfWinDecoBrownTextInputMiddle->load("GFX/windowDecorations/brown/sfTextInputMiddle.bmp");
-        sfWinDecoBrownTextInputRight->load("GFX/windowDecorations/brown/sfTextInputRight.bmp");
-*/
         // ships
-/*
         addToPool("aCC1", "GFX/ships/aCC1.bmp", 36);
         addToPool("aCD1", "GFX/ships/aCD1.bmp", 36);
         addToPool("aCH1", "GFX/ships/aCH1.bmp", 36);
@@ -289,28 +246,32 @@ void gfxSystem::createMsgWindow(int resX, int resY, int msgWinW, int msgWinH) {
         poolAdd("menue_bottom", "GFX/menue/sfBottom.bmp");
         poolAdd("menue_border", "GFX/menue/sfBorder.bmp");
 
+        // message window (brown)
+        poolAdd("msg_menue", "GFX/msg/brown/sfMenue.bmp");
+        poolAdd("msg_resize", "GFX/msg/brown/sfResize.bmp");
+        poolAdd("msg_background", "GFX/msg/brown/sfBackground.bmp");
+        poolAdd("msg_top_left", "GFX/msg/brown/sfTopLeft.bmp");
+        poolAdd("msg_top_middle", "GFX/msg/brown/sfTopMiddle.bmp");
+        poolAdd("msg_top_right", "GFX/msg/brown/sfTopRight.bmp");
+        poolAdd("msg_bottom_left", "GFX/msg/brown/sfBottomLeft.bmp");
+        poolAdd("msg_bottom_middle", "GFX/msg/brown/sfBottomMiddle.bmp");
+        poolAdd("msg_bottom_right", "GFX/msg/brown/sfBottomRight.bmp");
+        poolAdd("msg_middle_left", "GFX/msg/brown/sfMiddleLeft.bmp");
+        poolAdd("msg_middle_right", "GFX/msg/brown/sfMiddleRight.bmp");
+        poolAdd("msg_input_left", "GFX/msg/brown/sfTextInputLeft.bmp");
+        poolAdd("msg_input_middle", "GFX/msg/brown/sfTextInputMiddle.bmp");
+        poolAdd("msg_input_right", "GFX/msg/brown/sfTextInputRight.bmp");
 
         flagLoaded=1;
-
-
-        ///TODO: move out of the loading once to resize, BUG in there
-        //**** Create the message window
-//        sfMessageWindow->create(msgWinW,msgWinH);
-//        createMsgWindow(resX, resY, msgWinW,msgWinH);
-
     }
 
 
-    //**** Create the Menue
-    delete sfMenue;
-    sfMenue = new gfxImage;
-    sfMenue->create(35,resY);
-    sfMenue->setDefaultPositions(0,0);
+    //**** create complex systems
     createMenue(resX, resY);
+    createMsgWindow(resX, resY, 300, 40+(5*15)); // 5 messages
 
     //**** set the default positions
     poolGet("radar")->setDefaultPositions(resX-poolGet("radar")->width, 0);
-//    sfMessageWindow->setDefaultPositions(msgWinX,msgWinY);
 
 }
 
