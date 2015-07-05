@@ -40,8 +40,13 @@
 #include <cstdio>
 #include "SDL/SDL.h"
 
+#include "MessageIdentifiers.h"
+#include "RakPeerInterface.h"
+#include "RakNetTypes.h"
+#include "BitStream.h"
+
 #include "../srConfig.hpp"
-#include "../srNetwork.hpp"
+#include "../srTypes.hpp"
 
 #include "gfxImage.hpp"
 #include "gfxSystem.hpp"
@@ -50,7 +55,7 @@
 using namespace std;
 
 /// Main engine that runns the Client
-class client : public srNetwork {
+class client {
 
 	public:
 
@@ -106,6 +111,14 @@ class client : public srNetwork {
 		long  runtimeTime,
 			  runtimeCount;
 		float runtimeDelta;
+
+		/// Network
+		void netTick(void);
+		void netRead(RakNet::Packet *packet);
+		void netSend(int messageType);
+		bool netConnected;
+		RakNet::RakPeerInterface* rakPeer;
+		RakNet::Packet *rakPacket;
 
 		/// Mouse
 		int   mouseX,         //!< The actual mouse position X

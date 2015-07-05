@@ -29,6 +29,12 @@ client::client() {
     runtimeDelta=0;
     runtimeTime=0;
     runtimeOptimumFPS=60;
+
+    rakPacket = NULL;
+    RakNet::SocketDescriptor tmpSocketDescriptor;
+    rakPeer = RakNet::RakPeerInterface::GetInstance();
+    rakPeer->Startup(1,&tmpSocketDescriptor, 1);
+
 }
 
 client::~client() {
@@ -43,8 +49,7 @@ void client::init(string pPath) {
     screenDepth = config.getValue("ResolutionDepth", 32);
 
     // start network
-    rakInit(false);
-    rakConnect("127.0.0.1");
+    rakPeer->Connect("127.0.0.1", 60000, 0,0);
 }
 
 void client::initGFX(void) {
@@ -176,7 +181,7 @@ void client::tick(void) {
     memMouseY = mouseY;
 
     // poll the network buffer
-    rakTick();
+    netTick();
 
     // only draw when chnaged flag is set, otherwise just once a sec
     if(render) draw();
@@ -196,9 +201,9 @@ void client::tickRuntime(void) {
         runtimeCount++;
 
         // network keep alive ping
-        rakNetAliasPing();
+        netSend(PING);
 
-        // adjust the runtimeSleep time and free CPU (TODO-1: make in formular like x^2*5)
+        // adjust the runtimeSleep time and free CPU (TODO-1: make in formula like x^2*5)
         int temp=runtimeOptimumFPS-runtimeFpsSmooth;
         if(temp<-30) runtimeSleep += 4000;
         else if(temp<-20) runtimeSleep += 2000;
@@ -242,3 +247,117 @@ void client::draw(void) {
     runtimeRenders++;
 }
 
+void client::netTick(void) {
+    rakPacket=rakPeer->Receive();
+    int identifier=0;
+    while(rakPacket) {
+        identifier = (int)rakPacket->data[0];
+
+        switch(identifier) {
+
+            case ID_REMOTE_DISCONNECTION_NOTIFICATION:
+                cout << "netTick: Another client has disconnected." << endl;
+            break;
+
+            case ID_REMOTE_CONNECTION_LOST:
+                cout << "netTick: Another client has lost the connection." << endl;
+            break;
+
+            case ID_REMOTE_NEW_INCOMING_CONNECTION:
+                cout << "netTick: Another client has connected." << endl;
+            break;
+
+            case ID_CONNECTION_REQUEST_ACCEPTED:
+                cout << "netTick: A new connection." << endl;
+            break;
+
+            case ID_NEW_INCOMING_CONNECTION:
+                cout << "netTick: A connection is incoming." << endl;
+            break;
+
+            case ID_NO_FREE_INCOMING_CONNECTIONS:
+                cout << "netTick: The server is full." << endl;
+            break;
+
+            case ID_DISCONNECTION_NOTIFICATION:
+                cout << "netTick: A client has disconnected." << endl;
+            break;
+
+            case ID_CONNECTION_LOST:
+                cout << "netTick: A client lost the connection." << endl;
+            break;
+
+
+            //**** custom ****
+            case ID_USER_PACKET_ENUM:
+                netRead(rakPacket);
+            break;
+
+            default:
+                cout << "netTick: unknown: " << identifier << endl;
+            break;
+        }
+
+        // pop the package out of the buffer
+        rakPeer->DeallocatePacket(rakPacket);
+        rakPacket=rakPeer->Receive();   // fetch anotherone
+    }
+}
+
+void client::netRead(RakNet::Packet *packet) {
+    int messageType=0;
+    unsigned char systemType=0;
+    RakNet::RakString tmpStr;
+
+    // start reading
+    RakNet::BitStream myBitStream(packet->data, packet->length, false);
+    myBitStream.Read(systemType); // always 77=ID_USER_PACKET_ENUM
+    myBitStream.Read(messageType);
+
+    switch(messageType) {
+
+        case PONG:
+            cout << "netRead: got PONG." << endl;
+        break;
+
+        case VERSION_ASK:
+            //netSend(VERSION_ASK, rakPacket->systemAddress);
+        break;
+
+        default:
+            cout << "netRead: unknown '" << (int)messageType << endl;
+        break;
+    }
+}
+
+void client::netSend(int messageType) {
+    std::stringstream tmpMessage;
+    unsigned char systemType=ID_USER_PACKET_ENUM;
+    PacketPriority Priority=LOW_PRIORITY;
+
+    RakNet::BitStream *myBitStream = new RakNet::BitStream;
+    myBitStream->Write(systemType);
+    myBitStream->Write(messageType);
+
+    switch(messageType) {
+
+        case PING:
+            Priority=HIGH_PRIORITY;
+        break;
+
+        case PONG:
+            Priority=HIGH_PRIORITY;
+        break;
+
+        case VERSION_ASK:
+            //
+        break;
+
+        default:
+            cout << "send: unknown: '" << (int)messageType << endl;
+        break;
+    }
+
+    // Senden
+    rakPeer->Send(myBitStream, Priority, RELIABLE, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+}

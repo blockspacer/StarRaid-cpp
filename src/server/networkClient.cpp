@@ -1,10 +1,10 @@
-#include "srNetworkClient.hpp"
+#include "networkClient.hpp"
 
 
 /**
  * Set inicial values to NULL
  */
-srNetworkClient::srNetworkClient() {
+networkClient::networkClient() {
     cntLaag=0;
     cntFaildLogin=0;
     Status=0;
@@ -16,6 +16,6 @@ srNetworkClient::srNetworkClient() {
 /**
  * Long description
  */
-srNetworkClient::~srNetworkClient() {
+networkClient::~networkClient() {
     //
 }

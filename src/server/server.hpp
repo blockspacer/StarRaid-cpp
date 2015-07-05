@@ -38,16 +38,22 @@
 #include <vector>
 #include <unistd.h> 		//usleep
 
+#include "MessageIdentifiers.h"
+#include "RakPeerInterface.h"
+#include "RakNetTypes.h"
+#include "BitStream.h"
+
 #include "database.hpp"
+#include "networkClient.hpp"
 
 #include "../srTimer.hpp"
 #include "../srConfig.hpp"
-#include "../srNetwork.hpp"
+#include "../srTypes.hpp"
 
 
 using namespace std;
 
-class server : public srNetwork {
+class server {
 
 	private:
 		long runtime;	//!< In var count up every second and contains the runtime
@@ -73,10 +79,24 @@ class server : public srNetwork {
 		//### main logic
 		void tick(void);
 
-		//### object handling
+		//### objects
 		void objLoad(void);
 		void objLoop(void);
 		map<long, srObject> objects;
+
+		//### network
+		void netInit(void);
+		void netTick(void);
+		void netRead(RakNet::Packet *packet);
+		void netSend(int messageType, RakNet::SystemAddress adress);
+		void netClientCheck(void);
+		void netClientAdd(RakNet::Packet *packet);
+		void netClientTerminate(RakNet::SystemAddress address);
+		int netTx,	//!< counts the send per second
+			netRx;	//!< counts the recive per second
+		RakNet::RakPeerInterface* rakPeer;
+		RakNet::Packet *rakPacket;
+		map<RakNet::SystemAddress, networkClient> clients;
 
 		//### other stuff
 		ofstream logfile;

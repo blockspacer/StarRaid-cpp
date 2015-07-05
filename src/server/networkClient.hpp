@@ -26,8 +26,8 @@
  *
  */
 
-#ifndef SRNETWORKCLIENT_H
-#define SRNETWORKCLIENT_H
+#ifndef NETWORKCLIENT_H
+#define NETWORKCLIENT_H
 
 
 #include <iostream>
@@ -46,16 +46,16 @@
 using namespace std;
 
 ///All the events are handled here, this class is called in the mainloop and processes all the RakNet events via poll
-class srNetworkClient {
+class networkClient {
 
 
     public:
 
         /// Construcor
-        srNetworkClient();
+        networkClient();
 
         /// Destrucor
-        virtual ~srNetworkClient();
+        virtual ~networkClient();
 
         /// This var will count the laag time
         int cntLaag;
@@ -87,5 +87,5 @@ class srNetworkClient {
 
 };
 
-#endif // SRNETWORKCLIENT_H
+#endif // NETWORKCLIENT_H
 /** @} group*/

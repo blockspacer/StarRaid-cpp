@@ -28,13 +28,21 @@ server::server(string pPath) {
 	timers.addTimer("100th",    10); // 100 times per second
 
 	// start network
-	rakInit(true);
+	rakPacket = NULL;
+	rakPeer = RakNet::RakPeerInterface::GetInstance();
+	netTx = 0;
+	netRx = 0;
+	netInit();
 
 	logfile << "OK" << endl;
 }
 
 server::~server() {
-	// disconnect and end gracefully
+	// terminate all clients
+	for(map<RakNet::SystemAddress, networkClient>::iterator i=clients.begin(); i!=clients.end(); ++i) {
+		netSend(TERMINATE,(*i).first);
+	}
+
 }
 
 void server::tick(void) {
@@ -46,7 +54,7 @@ void server::tick(void) {
 		// caqche per second values
 		fpsSmooth = fps;
 		lpsSmooth = lps;
-		dpsSmooth = rakTx+rakRx;
+		dpsSmooth = netTx + netRx;
 		blpsSmooth = blps;
 		timers.tickSecond();
 		runtime++;
@@ -57,19 +65,17 @@ void server::tick(void) {
 		logfile << "fps: " << fpsSmooth << ", ";
 		logfile << "lps: " << lpsSmooth << ", ";
 		logfile << "blps: " << blpsSmooth << ", ";
-		logfile << "rx: " << rakRx << ", ";
-		logfile << "tx: " << rakTx << endl;
+		logfile << "rx: " << netRx << ", ";
+		logfile << "tx: " << netTx << endl;
 
 		// reset counter
 		fps = 0;
 		lps = 0;
 		dps = 0;
 		blps = 0;
-		rakTx = 0;
-		rakRx = 0;
 
 		// check on network connections
-		rakNetCheckClients();
+		netClientCheck();
 	}
 
 	// 10x second
@@ -82,8 +88,9 @@ void server::tick(void) {
 		//
 	}
 
-	// poll for network events
-	rakTick();
+	// check network
+	netTick();
+
 
 	// main calculation (ext to network distribution)
 	objLoop();
@@ -154,4 +161,156 @@ void server::objLoop(void) {
 
 }
 
+
+
+
+void server::netInit(void) {
+	RakNet::SocketDescriptor tmpSocketDescriptor;
+	tmpSocketDescriptor.port = 60000;
+	strcpy(tmpSocketDescriptor.hostAddress, "0");
+	rakPeer->Startup(1024, &tmpSocketDescriptor, 1);
+	rakPeer->SetMaximumIncomingConnections(1024);
+}
+
+void server::netClientCheck(void) {
+	RakNet::SystemAddress tmpSystemAddress;
+	bool flagDelete=0;
+	for( map<RakNet::SystemAddress, networkClient>::iterator i=clients.begin(); i!=clients.end(); ++i) {
+		(*i).second.cntLaag++;
+		if((*i).second.cntLaag >= 15) {
+			tmpSystemAddress = (*i).first;
+			flagDelete=1;
+		}
+	}
+	// delete one per secon is good enough
+	if(flagDelete) netClientTerminate(tmpSystemAddress);
+}
+
+void server::netClientAdd(RakNet::Packet *packet) {
+	networkClient tmpClient;
+	clients.insert(pair<RakNet::SystemAddress, networkClient>(packet->systemAddress, tmpClient));
+	cout << "netClientTerminate: Client Added." << endl;
+}
+
+void server::netClientTerminate(RakNet::SystemAddress address) {
+	netSend(TERMINATE,address);				// send terminate-notification to client
+	clients.erase(address);					// remove client from pool
+	rakPeer->CloseConnection(address,1);	// close peers conection
+	cout << "netClientTerminate: Client Terminated." << endl;
+}
+
+void server::netTick(void) {
+	rakPacket=rakPeer->Receive();
+	int identifier=0;
+	while(rakPacket) {
+		identifier = (int)rakPacket->data[0];
+		switch(identifier) {
+			case ID_REMOTE_DISCONNECTION_NOTIFICATION:
+				cout << "netTick: Another client has disconnected." << endl;
+			break;
+
+			case ID_REMOTE_CONNECTION_LOST:
+				cout << "netTick: Another client has lost the connection." << endl;
+			break;
+
+			case ID_REMOTE_NEW_INCOMING_CONNECTION:
+				cout << "netTick: Another client has connected." << endl;
+			break;
+
+			case ID_CONNECTION_REQUEST_ACCEPTED:
+				cout << "netTick: A new connection." << endl;
+				netSend(VERSION_ASK, rakPacket->systemAddress);
+			break;
+
+			case ID_NEW_INCOMING_CONNECTION:
+				cout << "netTick: A connection is incoming." << endl;
+				netClientAdd(rakPacket);
+			break;
+
+			case ID_NO_FREE_INCOMING_CONNECTIONS:
+				cout << "netTick: The server is full." << endl;
+			break;
+
+			case ID_DISCONNECTION_NOTIFICATION:
+				cout << "netTick: A client has disconnected." << endl;
+			break;
+
+			case ID_CONNECTION_LOST:
+				cout << "netTick: A client lost the connection." << endl;
+			break;
+
+
+			//**** custom ****
+			case ID_USER_PACKET_ENUM:
+				netRead(rakPacket);
+			break;
+
+			default:
+				cout << "netTick: unknown: " << identifier << endl;
+			break;
+		}
+
+		// pop the package out of the buffer
+		rakPeer->DeallocatePacket(rakPacket);
+		rakPacket=rakPeer->Receive();   // fetch anotherone
+	}
+}
+
+void server::netRead(RakNet::Packet *packet) {
+	netRx++;
+	std::stringstream tmpMessage;
+	int messageType=0;
+	unsigned char systemType=0;
+	RakNet::RakString tmpStr;
+
+	// start reading
+	RakNet::BitStream myBitStream(packet->data, packet->length, false);
+	myBitStream.Read(systemType); // always 77=ID_USER_PACKET_ENUM
+	myBitStream.Read(messageType);
+
+	switch(messageType) {
+
+		case PING:
+			netSend(PONG, rakPacket->systemAddress);
+			clients[packet->systemAddress].cntLaag = 0;
+		break;
+
+		default:
+			cout << "netRead: unknown '" << messageType << endl;
+		break;
+	}
+}
+
+void server::netSend(int messageType, RakNet::SystemAddress address) {
+	netTx++;
+	std::stringstream tmpMessage;
+	unsigned char systemType=ID_USER_PACKET_ENUM;
+	PacketPriority Priority=LOW_PRIORITY;
+
+	RakNet::BitStream *myBitStream = new RakNet::BitStream;
+	myBitStream->Write(systemType);
+	myBitStream->Write(messageType);
+
+	switch(messageType) {
+
+		case PONG:
+			Priority=HIGH_PRIORITY;
+		break;
+
+		case VERSION_ASK:
+			//
+		break;
+
+		case TERMINATE:
+			Priority=HIGH_PRIORITY;
+		break;
+
+		default:
+			cout << "netSend: unknown: '" << messageType << endl;
+		break;
+	}
+
+	// Senden
+	rakPeer->Send(myBitStream, Priority, RELIABLE, 0, address, true);
+}
 

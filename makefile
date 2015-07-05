@@ -23,6 +23,9 @@ lib/server/server.o: src/server/server.cpp
 lib/server/database.o: src/server/database.cpp
 	$(CC) $(CFLAGS) -L lib/server/ src/server/database.cpp -o lib/server/database.o
 
+lib/server/networkClient.o: src/server/networkClient.cpp
+	$(CC) $(CFLAGS) src/server/networkClient.cpp -o lib/server/networkClient.o
+
 
 
 
@@ -55,13 +58,7 @@ lib/client/gfxFont.o: src/client/gfxFont.cpp
 
 
 
-### Shared Stuff
-lib/srNetwork.o: src/srNetwork.cpp
-	$(CC) $(CFLAGS) src/srNetwork.cpp -o lib/srNetwork.o
-
-lib/srNetworkClient.o: src/srNetworkClient.cpp
-	$(CC) $(CFLAGS) src/srNetworkClient.cpp -o lib/srNetworkClient.o
-
+### shared recources
 lib/srTimer.o: src/srTimer.cpp
 	$(CC) $(CFLAGS) src/srTimer.cpp -o lib/srTimer.o
 
