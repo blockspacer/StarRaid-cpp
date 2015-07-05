@@ -89,7 +89,7 @@ void gfxSystem::poolAdd(string pName, string pFileName) {
  *   @param resX The resolution width
  *   @param resY The resolution height
  */
-void gfxSystem::createMenue(int resX, int resY) {
+void gfxSystem::createMenue(int resX, int resY, int hover) {
 
     delete sfMenue;
     sfMenue = new gfxImage;
@@ -107,7 +107,11 @@ void gfxSystem::createMenue(int resX, int resY) {
     SDL_BlitSurface(poolGet("menue_logo")->getSurface(), NULL, sfMenue->getSurface(), NULL );
     for(i=0;i<=7;i++) {
         tmpRect = newSDL_Rect(0,((i*30)+128),0,0);
-        SDL_BlitSurface(poolGet("menue_passive")->getSurface(), NULL, sfMenue->getSurface(), &tmpRect );
+        if(hover && (hover-1) == i) {
+            SDL_BlitSurface(poolGet("menue_active")->getSurface(), NULL, sfMenue->getSurface(), &tmpRect );
+        } else {
+            SDL_BlitSurface(poolGet("menue_passive")->getSurface(), NULL, sfMenue->getSurface(), &tmpRect );
+        }
     }
 
     tmpRect = newSDL_Rect(0,((8*30)+ 128),0,0);
@@ -267,7 +271,7 @@ void gfxSystem::createMsgWindow(int resX, int resY, int msgWinW, int msgWinH) {
 
 
     //**** create complex systems
-    createMenue(resX, resY);
+    createMenue(resX, resY, 0);
     createMsgWindow(resX, resY, 300, 40+(5*15)); // 5 messages
 
     //**** set the default positions

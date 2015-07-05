@@ -101,6 +101,9 @@ class gfxSystem : public sdlHelper {
 		/// Draw a surface out of the pool
 		void poolAdd(string pName, string pFileName, int pRotate);
 
+		/// puzzels together a menue
+		void createMenue(int resX, int resY, int hover);
+
 		/// request a surface
 		gfxImage* poolGet(string pKey);
 
@@ -118,9 +121,6 @@ class gfxSystem : public sdlHelper {
 
 		/// Will be set after the load proccess is done
 		bool flagLoaded;
-
-		/// puzzels together a menue
-		void createMenue(int resX, int resY);
 
 		/// Does the decorations for the chat window
 		void createMsgWindow(int resX, int resY, int msgWinW, int msgWinH);

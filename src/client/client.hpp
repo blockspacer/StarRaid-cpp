@@ -80,6 +80,9 @@ class client {
 		/// Calculates runtimedata
 		void tickRuntime(void);
 
+		/// Check on menue hovering and click
+		void tickMenue(void);
+
 		/// Draw the screen
 		void draw(void);
 
@@ -94,6 +97,9 @@ class client {
 
 		/// The main games surface buffer for blitting
 		SDL_Surface *screen;
+
+		/// hovering status
+		int   menueHover;
 
 		/// Rerender Flag
 		bool  render;

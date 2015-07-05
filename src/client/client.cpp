@@ -12,6 +12,7 @@ client::client() {
     moveX = -1;
     moveY = -1;
 
+    menueHover = 0;
     render=1;
 
     screen = NULL;
@@ -155,7 +156,7 @@ void client::tick(void) {
             memMouseDownX = mouseX;
             memMouseDownY = mouseY;
         }
-    } else {
+    } else { // no system mouse
         // Free Mouse And generate mouse up event
         if(memMouseDownX!=-1 || memMouseDownY!=-1) {
             moveX = memMouseDownX;
@@ -170,12 +171,6 @@ void client::tick(void) {
         }
     }
 
-
-    // render when onmouseover effects AND if the mouse was just moved out (remove the last active tab)
-    if(mouseX < 35 && mouseY > 128 && mouseY < 368) render=1;
-    else if(memMouseX < 35) render=1;
-
-
     // remember the last mouse position
     memMouseX = mouseX;
     memMouseY = mouseY;
@@ -183,11 +178,32 @@ void client::tick(void) {
     // poll the network buffer
     netTick();
 
+    // check on menue action
+    tickMenue();
+
     // only draw when chnaged flag is set, otherwise just once a sec
     if(render) draw();
 
     // Does runtime calculations and adjustments
     tickRuntime();
+}
+
+void client::tickMenue(void) {
+    int oldHover = menueHover;
+    if(memMouseX < 35) {
+        int i;
+        for(i=0;i<=7;i++) {
+            if( memMouseY > (i*30)+128 && memMouseY < (i*30)+128+30 ) {
+                menueHover = i+1;
+            }
+        }
+    } else {
+        menueHover = 0;
+    }
+    if(oldHover!=menueHover) {
+        gfxSystem::instance()->createMenue(screenResX, screenResY, menueHover);
+        render=1;
+    }
 }
 
 void client::tickRuntime(void) {
@@ -239,6 +255,8 @@ void client::draw(void) {
     gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 70, "Runtime: ", runtimeCount);
     gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 85, "Delta: ", runtimeDelta);
     gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 100, "Sleep: ", runtimeSleep);
+    gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 115, "Hover: ", menueHover);
+
 
     // draw other objects
     drawGfx();
