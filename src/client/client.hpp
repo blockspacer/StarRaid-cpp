@@ -36,6 +36,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <vector>
 #include <time.h>
 #include <cstdio>
 #include "SDL/SDL.h"
@@ -95,20 +96,25 @@ class client {
 		srConfig config;
 		gfxSystem gfx;
 
+
 		/// The main games surface buffer for blitting
 		SDL_Surface *screen;
+
 
 		/// hovering status
 		int   menueHover;
 
+
 		/// Rerender Flag
 		bool  render;
+
 
 		/// Settings
 		int   screenResX,
 			  screenResY,
 			  screenFull,
 			  screenDepth;
+
 
 		/// Runtime
 		int   runtimeFlops,
@@ -121,6 +127,7 @@ class client {
 			  runtimeCount;
 		float runtimeDelta;
 
+
 		/// Network
 		void netTick(void);
 		void netRead(RakNet::Packet *packet);
@@ -128,6 +135,19 @@ class client {
 		bool netConnected;
 		RakNet::RakPeerInterface* rakPeer;
 		RakNet::Packet *rakPacket;
+
+
+        /// Vector that holds the star types and positions
+        struct structStar {
+            float x, y;
+            int typ;
+        };
+        vector<structStar> stars;
+        int starsCount; //!< Is just counting the Stars
+        void starsInit(void);
+        void starsMove(int moveX, int moveY);
+        void starsDraw();
+
 
 		/// Mouse
 		int   mouseX,         //!< The actual mouse position X
@@ -141,6 +161,7 @@ class client {
 
 		long  moveX, 
 			  moveY;
+
 
 		/// is set if the mouse position is changes
 		bool  flagMausMove;

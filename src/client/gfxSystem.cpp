@@ -242,6 +242,11 @@ void gfxSystem::createMsgWindow(int resX, int resY, int msgWinW, int msgWinH) {
 */
         poolAdd("radar", "GFX/sfRadar.bmp", 0);
 
+        // stars (could be direct for speed)
+        poolAdd("star_big", "GFX/stars/sfBig.bmp");
+        poolAdd("star_middle", "GFX/stars/sfMiddle.bmp");
+        poolAdd("star_small", "GFX/stars/sfSmall.bmp");
+
         // menue
         poolAdd("menue_bg", "GFX/menue/sfBg.bmp");
         poolAdd("menue_logo", "GFX/menue/sfLogo.bmp");

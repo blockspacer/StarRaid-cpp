@@ -81,6 +81,9 @@ void client::initGFX(void) {
 
     // load images & precalculate menues aso.
     gfxSystem::instance()->init(screenResX, screenResY);
+
+    // generate stars
+    starsInit();
 }
 
 bool client::run(void) {
@@ -270,6 +273,9 @@ void client::draw(void) {
 
 void client::drawGfx(void) {
 
+    // draw stars first
+    starsDraw();
+
     // fixed elements
     gfxSystem::instance()->poolGet("radar")->draw(screen);
 
@@ -394,3 +400,88 @@ void client::netSend(int messageType) {
     // Senden
     rakPeer->Send(myBitStream, Priority, RELIABLE, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 }
+
+void client::starsInit(void) {
+
+    // delte all stars because of resolution change
+    stars.clear();
+
+    structStar temp;
+    int i;
+    float pIntensity=screenResX*screenResY/150000;
+
+    // small
+    for(i=0;i<(int)(pIntensity*25);i++) {
+        temp.typ = 3;
+        temp.x = rand()%screenResX;
+        temp.y = rand()%screenResY;
+        stars.push_back(temp);
+        starsCount++;
+    }
+
+    // middle
+    for(i=0;i<(int)(pIntensity*20);i++) {
+        temp.typ = 2;
+        temp.x = rand()%screenResX;
+        temp.y = rand()%screenResY;
+        stars.push_back(temp);
+        starsCount++;
+    }
+
+    // big
+    for(i=0;i<(int)(pIntensity*15);i++) {
+        temp.typ = 1;
+        temp.x = rand()%screenResX;
+        temp.y = rand()%screenResY;
+        stars.push_back(temp);
+        starsCount++;
+    }
+}
+
+/**
+ * Will calculate the movement of the stars
+ *   @param moveX The Movement rate of the selfObject from last calculation in X
+ *   @param moveY The Movement rate of the selfObject from last calculation in Y
+ */
+void client::starsMove(int moveX, int moveY) {
+
+    if(moveX != 0 || moveY != 0) {
+
+        vector<structStar>::iterator i;
+        for( i=stars.begin(); i!=stars.end(); ++i) {
+
+            int mod = 0;
+            int pFactor=1;
+
+            // flip edge
+            if((*i).y < 0) (*i).y = screenResY;
+            if((*i).x < 0) (*i).x = screenResX;
+            if((*i).y > screenResY) (*i).y = 0;
+            if((*i).x > screenResX) (*i).x = 0;
+
+            // Ebenen modifikator
+            if((*i).typ==3) mod = 15;
+            if((*i).typ==2) mod = 6;
+            if((*i).typ==1) mod = 2;
+
+            (*i).x += ((float)moveX/mod)*pFactor;
+            (*i).y += ((float)moveY/mod)*pFactor;
+        }
+    }
+}
+
+/**
+ * Is drawing the stars ito the screen pinter
+ */
+void client::starsDraw(void) {
+
+    // star background
+    vector<structStar>::iterator i;
+    for( i=stars.begin(); i!=stars.end(); ++i) {
+        if((*i).typ==3) gfxSystem::instance()->poolGet("star_big")->drawCentered(screen, (*i).x, (*i).y, 0);
+        if((*i).typ==2) gfxSystem::instance()->poolGet("star_middle")->drawCentered(screen, (*i).x, (*i).y, 0);
+        if((*i).typ==1) gfxSystem::instance()->poolGet("star_small")->drawCentered(screen, (*i).x, (*i).y, 0);
+    }
+
+}
+
