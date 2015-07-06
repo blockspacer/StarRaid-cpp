@@ -7,6 +7,7 @@ enum netMessageType {
 	VERSION_WRONG,		  //!< failed wrong version
 	LOGIN_ASK,            //!< ask for login
 	LOGIN_ANSWER,         //!< answer with login details (name, pass)
+	LOGIN_WRONG,		  //!< failed login
 	OBJ_BEACON,           //!< has basic object infos, like pos, type, name, id
 	OBJ_SELF,             //!< same as beacon but for the object to itself
 	CMD_MOVE,             //!< tells where a move_to click was pointed to
@@ -28,6 +29,7 @@ static const char * netMessageTypenames[] = {
 	"VERSION_WRONG",
 	"LOGIN_ASK",
 	"LOGIN_ANSWER",
+	"LOGIN_WRONG",
 	"OBJ_BEACON",
 	"OBJ_SELF",
 	"CMD_MOVE",

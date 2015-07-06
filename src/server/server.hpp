@@ -47,6 +47,7 @@
 #include "networkClient.hpp"
 
 #include "../srTimer.hpp"
+#include "../srObject.hpp"
 #include "../srConfig.hpp"
 #include "../srTypes.hpp"
 
@@ -90,9 +91,11 @@ class server {
 		void netTick(void);
 		void netRead(RakNet::Packet *packet);
 		void netSend(int messageType, RakNet::SystemAddress adress);
+		void netSendBeacon(long deliverTo, long deliverObject, int level);
 		void netClientCheck(void);
 		void netClientAdd(RakNet::Packet *packet);
 		void netClientTerminate(RakNet::SystemAddress address);
+		void netAfterLogin(RakNet::SystemAddress address);
 		int netTx,	//!< counts the send per second
 			netRx;	//!< counts the recive per second
 		RakNet::RakPeerInterface* rakPeer;

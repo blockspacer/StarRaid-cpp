@@ -278,8 +278,12 @@ void server::netRead(RakNet::Packet *packet) {
 			myBitStream.Read(user);
 			myBitStream.Read(pass);
 			long id = db.login(user.C_String(), pass.C_String());
-			clients[packet->systemAddress].name = user;
-			clients[packet->systemAddress].objektID = id;
+			if(id!=0) {
+				clients[packet->systemAddress].name = user;
+				clients[packet->systemAddress].objektID = id;
+				objects[id].pilotAddress = packet->systemAddress;
+				netAfterLogin(rakPacket->systemAddress);
+			} else netSend(LOGIN_WRONG, rakPacket->systemAddress);
 			break;
 		}
 
@@ -320,7 +324,6 @@ void server::netSend(int messageType, RakNet::SystemAddress address) {
 		}
 
 		case TERMINATE: {
-			cout << "netSend: TERMINATE" << endl;
 			Priority=HIGH_PRIORITY;
 			break;
 		}
@@ -333,4 +336,43 @@ void server::netSend(int messageType, RakNet::SystemAddress address) {
 
 	// Senden
 	rakPeer->Send(myBitStream, Priority, RELIABLE, 0, address, false);
+}
+
+void server::netAfterLogin(RakNet::SystemAddress address) {
+	long id = clients[address].objektID;
+	if(id!=0) {
+		netSendBeacon(id,id,2); // self in full detail
+		vector<long> tmp = objects[id].neighbours;
+		vector<long>::iterator e;
+		for(e=tmp.begin(); e!=tmp.end(); ++e) {
+			netSendBeacon(id,(*e),1); // neighbour beacon only
+		}
+	}
+}
+
+void server::netSendBeacon(long deliverTo, long deliverObject, int level) {
+	netTx++;
+
+    // set whenever send rebular beacon or itself
+    int customType;
+    if(level==1) customType = OBJ_BEACON;
+    if(level==2) customType = OBJ_SELF;
+
+    // raknet system enum
+    unsigned char systemType=ID_USER_PACKET_ENUM;
+
+    // create new bitstream and set basic headers
+    RakNet::BitStream *myBitStream = new RakNet::BitStream;
+    myBitStream->Write(systemType);
+    myBitStream->Write(customType);
+
+    // Beacon data
+    myBitStream->Write(objects[deliverObject].handle);
+    myBitStream->Write(objects[deliverObject].x);
+    myBitStream->Write(objects[deliverObject].y);
+    myBitStream->Write(objects[deliverObject].type);
+    myBitStream->Write(objects[deliverObject].status);
+
+    // send bitstream out
+    rakPeer->Send(myBitStream, HIGH_PRIORITY, RELIABLE, 0, objects[deliverTo].pilotAddress, false);
 }

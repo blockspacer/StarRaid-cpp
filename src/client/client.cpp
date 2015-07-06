@@ -358,6 +358,16 @@ void client::netRead(RakNet::Packet *packet) {
             break;
         }
 
+        case OBJ_BEACON: {
+            netReadBeacon(packet, 0);
+            break;
+        }
+
+        case OBJ_SELF: {
+            netReadBeacon(packet, 1);
+            break;
+        }
+
         default: {
             cout << "netRead: Not Handled: " << netMessageTypenames[messageType] << endl;
             break;
@@ -411,6 +421,41 @@ void client::netSend(int messageType) {
 
     // Senden
     rakPeer->Send(myBitStream, Priority, RELIABLE, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+}
+
+void client::netReadBeacon(RakNet::Packet *packet, bool flagSelf) {
+
+    // stuff need to unpack the bitstream
+    int customType=0;
+    unsigned char systemType=0;
+
+
+    // start reading
+    RakNet::BitStream myBitStream(packet->data, packet->length, false);
+    myBitStream.Read(systemType); // allways 77=ID_USER_PACKET_ENUM
+    myBitStream.Read(customType);
+
+    // create temprary object
+    srObject tmpObject;
+
+    // Beacon data
+    myBitStream.Read(tmpObject.handle);
+    myBitStream.Read(tmpObject.x);
+    myBitStream.Read(tmpObject.y);
+    myBitStream.Read(tmpObject.type);
+    myBitStream.Read(tmpObject.status);
+
+    // tell the object system witch object is the players
+    if(flagSelf) {
+        selfHandle = tmpObject.handle;
+        render=1;
+    }
+        
+    cout << "netReadBeacon self: " << flagSelf << ", id: " << tmpObject.handle << endl;
+    objects[tmpObject.handle] = tmpObject;
+
+    // rerender on incoming package
+    //TODO: render non self when in screen
 }
 
 void client::starsInit(void) {

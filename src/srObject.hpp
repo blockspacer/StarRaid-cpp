@@ -36,6 +36,11 @@
 #include <string>
 #include <vector>
 
+#include "MessageIdentifiers.h"
+#include "RakPeerInterface.h"
+#include "RakNetTypes.h"
+#include "BitStream.h"
+
 #include "srCargo.hpp"
 
 using namespace std;
@@ -59,6 +64,7 @@ class srObject {
 
 		/// the game relevant game neighbours around the object
 		vector<long> neighbours;
+		RakNet::SystemAddress pilotAddress;
 
 		//### basics ###
 		long handle;	//!< The unique handle to identify the object

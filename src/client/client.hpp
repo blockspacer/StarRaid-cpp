@@ -48,6 +48,7 @@
 
 #include "../srConfig.hpp"
 #include "../srTypes.hpp"
+#include "../srObject.hpp"
 
 #include "gfxImage.hpp"
 #include "gfxSystem.hpp"
@@ -133,6 +134,7 @@ class client {
 		void netTick(void);
 		void netRead(RakNet::Packet *packet);
 		void netSend(int messageType);
+		void netReadBeacon(RakNet::Packet *packet, bool flagSelf);
 		bool netConnected;
 		RakNet::RakPeerInterface* rakPeer;
 		RakNet::Packet *rakPacket;
@@ -148,6 +150,11 @@ class client {
         void starsInit(void);
         void starsMove(int moveX, int moveY);
         void starsDraw();
+
+
+        /// Objects
+        long selfHandle;
+        map<long, srObject> objects;
 
 
 		/// Mouse
