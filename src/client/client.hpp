@@ -101,8 +101,9 @@ class client {
 		SDL_Surface *screen;
 
 
-		/// hovering status
-		int   menueHover;
+		/// varion stuff
+		int menueHover; //!< If a menue is hoverd
+		int version; //!< If a menue is hoverd
 
 
 		/// Rerender Flag

@@ -61,16 +61,13 @@ class networkClient {
         int cntLaag;
 
         /// this var will count the failed login tries
-        int cntFaildLogin;
+        int cntFailedLogin;
 
         /// This var has the general status of the network engine
         int Status;
 
-        /// This var will tell if class is in use or not
-        bool inUse;
-
         /// This var holds the name of the player
-        char name[128];
+        string name;
 
         /// This var contains the IP address as well as the port number of the connection
         RakNet::SystemAddress address;

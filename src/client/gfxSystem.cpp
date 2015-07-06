@@ -10,19 +10,6 @@ gfxSystem::gfxSystem() {
     sfMenue = new gfxImage;
     sfMsg = new gfxImage;
 
-/*
-    //ressouces
-    sfRadarSpotNeutralSmall = new gfxImage;
-
-    sfMouseSpot = new  gfxImage;
-
-    sfMessageWindow = new gfxImage;
-
-    sfStarBig = new gfxImage;
-    sfStarMiddle = new gfxImage;
-    sfStarSmall = new gfxImage;
-*/
-
     fontArial12 = new gfxFont;
     fontArial18 = new gfxFont;
 }
@@ -34,18 +21,6 @@ gfxSystem::~gfxSystem() {
     delete sfNone;
     delete sfMenue;
     delete sfMsg;
-
-/*
-    delete sfRadarSpotNeutralSmall;
-
-    delete sfMessageWindow;
-
-    delete sfMouseSpot;
-
-    delete sfStarBig;
-    delete sfStarMiddle;
-    delete sfStarSmall;
-*/
     delete fontArial12;
     delete fontArial18;
 }
@@ -202,45 +177,10 @@ void gfxSystem::createMsgWindow(int resX, int resY, int msgWinW, int msgWinH) {
         fontArial12->load("GFX/times.ttf",12, 255,255,255,0);
         fontArial18->load("GFX/times.ttf",18, 155,155,155,0);
 
-/*
-        addToPool("sfCursor", "GFX/sfCursor.bmp", 0);
-        addToPool("sfRadar", "GFX/sfRadar.bmp", 0);
-
-        ///TODO: move stuff to the pool
-        sfRadarSpotNeutralSmall->load("GFX/sfRadarSpotNeutralSmall.bmp");
-
-        sfMouseSpot->load("GFX/sfMouseSpot.bmp");
-
-        sfStarBig->load("GFX/bg/mapStarBig.bmp");
-        sfStarMiddle->load("GFX/bg/mapStarMiddle.bmp");
-        sfStarSmall->load("GFX/bg/mapStarSmall.bmp");
+        poolAdd("radar", "GFX/sfRadar.bmp", 0);
 
         // ships
-        addToPool("aCC1", "GFX/ships/aCC1.bmp", 36);
-        addToPool("aCD1", "GFX/ships/aCD1.bmp", 36);
-        addToPool("aCH1", "GFX/ships/aCH1.bmp", 36);
-        addToPool("aCZ1", "GFX/ships/aCZ1.bmp", 36);
-
-        // marks
-        addToPool("sfSelect50", "GFX/sfSelect50.bmp",36);
-        addToPool("sfSelect100", "GFX/sfSelect100.bmp",36);
-        addToPool("sfSelect200", "GFX/sfSelect200.bmp",36);
-
-        // actions
-        addToPool("actionFrameOn", "GFX/action/frame/frameOn.bmp", 0);
-        addToPool("actionFrameOff", "GFX/action/frame/frameOff.bmp", 0);
-        addToPool("actionFrameLoading", "GFX/action/frame/frameLoading.bmp", 0);
-        addToPool("actionLoading", "GFX/action/frame/loading.bmp", 0);
-        addToPool("actionReady", "GFX/action/frame/ready.bmp", 0);
-
-        addToPool("actionComEmp", "GFX/action/comEmp.bmp", 0);
-        addToPool("actionComScan", "GFX/action/comScan.bmp", 0);
-        addToPool("actionGunSingle", "GFX/action/gunSingle.bmp", 0);
-        addToPool("actionGunMulti", "GFX/action/gunMulti.bmp", 0);
-        addToPool("actionLaserSingle", "GFX/action/laserSingle.bmp", 0);
-        addToPool("actionLaserMulti", "GFX/action/laserMulti.bmp", 0);
-*/
-        poolAdd("radar", "GFX/sfRadar.bmp", 0);
+        poolAdd("SCH1", "GFX/ships/SCH1.bmp", 36);
 
         // stars (could be direct for speed)
         poolAdd("star_big", "GFX/stars/sfBig.bmp");

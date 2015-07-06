@@ -50,6 +50,7 @@ class database {
 		database();
 		~database();
 		void connect(string pName, string pHost, string pUser, string pPass, string pPort);
+		long login(string user, string pass);
 		vector<srObject> loadObjects(void);
 
 	private:

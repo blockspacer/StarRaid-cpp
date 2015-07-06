@@ -68,3 +68,57 @@ vector<srObject> database::loadObjects(void) {
 	return tmpObjects;
 }
 
+/**
+ * Takes a username and password and checks the dataset against the database, if valid it returns the object handle the character is set to
+ *   @param User The username
+ *   @param Pass The password
+ */
+long database::login(string user, string pass) {
+
+    MYSQL_ROW row;
+    MYSQL_RES *res;
+    string sqlCommand;
+    std::stringstream tmpCommand;
+    string::size_type test;
+    long retval=0;
+    long resultCount=0;
+
+    // TODO: i have no idea what i am doing here, let this be double checked
+
+	test = user.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890_");
+	if(test != string::npos) {
+		cout << "database::login: SQL injection detected" << endl;
+	    return retval;
+	}
+
+	test = pass.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890_");
+	if(test != string::npos) {
+		cout << "database::login: SQL injection detected" << endl;
+	    return retval;
+	}
+
+    tmpCommand << "SELECT objects.id FROM objects, login, characters WHERE login.id = characters.login_id AND characters.id = objects.character_id AND username = '" << user << "' AND password = '" << pass << "'";
+    sqlCommand = tmpCommand.str();
+
+
+    if(mysql_query(sqlSocket, sqlCommand.c_str())==0) {
+
+        res = mysql_store_result(sqlSocket);            // get result
+        while((row = mysql_fetch_row(res)) != NULL) { // grap row
+            retval = atoi(row[0]);
+            resultCount++;
+        }
+
+        // important, otherwise SYNC error
+        mysql_free_result(res);
+
+        // more than one result must a NPC
+        if(resultCount>1) retval = 0;
+
+    }
+    else {
+        cout << "database::login: " << (const char*)mysql_error(sqlSocket) << endl;
+    }
+    return retval;
+}
+

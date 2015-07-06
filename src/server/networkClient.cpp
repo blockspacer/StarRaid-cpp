@@ -6,10 +6,9 @@
  */
 networkClient::networkClient() {
     cntLaag=0;
-    cntFaildLogin=0;
+    cntFailedLogin=0;
     Status=0;
-    inUse=0;
-//    name[128];
+    name="";
     objektID=0;
 }
 

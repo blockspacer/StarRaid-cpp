@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     client myClient;
 
     /// init the engine
-    myClient.init("client.xml");
+    myClient.init("client.conf");
 
     int end=0;
     while(end==0)  {

@@ -12,6 +12,7 @@ client::client() {
     moveX = -1;
     moveY = -1;
 
+    version = 101;
     menueHover = 0;
     render=1;
 
@@ -50,7 +51,7 @@ void client::init(string pPath) {
     screenDepth = config.getValue("ResolutionDepth", 32);
 
     // start network
-    rakPeer->Connect("127.0.0.1", 60000, 0,0);
+    rakPeer->Connect(config.getValue("Server","127.0.0.1").c_str(), 60000, 0,0);
 }
 
 void client::initGFX(void) {
@@ -253,12 +254,12 @@ void client::draw(void) {
     // empty
     SDL_FillRect(screen, NULL, 0x000000);
 
-    gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 40, "FPS: ", runtimeFpsSmooth);
-    gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 55, "Renders: ", runtimeRenderSmooth);
-    gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 70, "Runtime: ", runtimeCount);
-    gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 85, "Delta: ", runtimeDelta);
-    gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 100, "Sleep: ", runtimeSleep);
-    gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 115, "Hover: ", menueHover);
+    gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 20, "FPS: ", runtimeFpsSmooth);
+    gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 35, "Renders: ", runtimeRenderSmooth);
+    gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 50, "Runtime: ", runtimeCount);
+    gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 65, "Delta: ", runtimeDelta);
+    gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 80, "Sleep: ", runtimeSleep);
+    gfxSystem::instance()->fontArial12->drawtextPair(screen ,50, 95, "Hover: ", menueHover);
 
 
     // draw other objects
@@ -294,47 +295,30 @@ void client::netTick(void) {
 
         switch(identifier) {
 
-            case ID_REMOTE_DISCONNECTION_NOTIFICATION:
-                cout << "netTick: Another client has disconnected." << endl;
-            break;
+            case ID_CONNECTION_REQUEST_ACCEPTED: {
+                netSend(CLIENT_CONNECTED);
+                break; 
+            }
 
-            case ID_REMOTE_CONNECTION_LOST:
-                cout << "netTick: Another client has lost the connection." << endl;
-            break;
-
-            case ID_REMOTE_NEW_INCOMING_CONNECTION:
-                cout << "netTick: Another client has connected." << endl;
-            break;
-
-            case ID_CONNECTION_REQUEST_ACCEPTED:
-                cout << "netTick: A new connection." << endl;
-            break;
-
-            case ID_NEW_INCOMING_CONNECTION:
-                cout << "netTick: A connection is incoming." << endl;
-            break;
-
-            case ID_NO_FREE_INCOMING_CONNECTIONS:
+            case ID_NO_FREE_INCOMING_CONNECTIONS: {
                 cout << "netTick: The server is full." << endl;
-            break;
+                break; 
+            }
 
-            case ID_DISCONNECTION_NOTIFICATION:
-                cout << "netTick: A client has disconnected." << endl;
-            break;
-
-            case ID_CONNECTION_LOST:
+            case ID_CONNECTION_LOST: {
                 cout << "netTick: A client lost the connection." << endl;
-            break;
+                break; 
+            }
 
-
-            //**** custom ****
-            case ID_USER_PACKET_ENUM:
+            case ID_USER_PACKET_ENUM: {
                 netRead(rakPacket);
-            break;
+                break;
+            }
 
-            default:
-                cout << "netTick: unknown: " << identifier << endl;
-            break;
+            default: {
+                cout << "netTick: Not Handled: " << rakNetMessageNames[identifier] << endl;
+                break;
+            }
         }
 
         // pop the package out of the buffer
@@ -355,17 +339,29 @@ void client::netRead(RakNet::Packet *packet) {
 
     switch(messageType) {
 
-        case PONG:
-            cout << "netRead: got PONG." << endl;
-        break;
+        case PING: {
+            netSend(PONG);
+            break;
+        }
 
-        case VERSION_ASK:
-            //netSend(VERSION_ASK, rakPacket->systemAddress);
-        break;
+        case PONG: {
+            break;
+        }
 
-        default:
-            cout << "netRead: unknown '" << (int)messageType << endl;
-        break;
+        case VERSION_ASK: {
+            netSend(VERSION_ANSWER);
+            break;
+        }
+
+        case LOGIN_ASK: {
+            netSend(LOGIN_ANSWER);
+            break;
+        }
+
+        default: {
+            cout << "netRead: Not Handled: " << netMessageTypenames[messageType] << endl;
+            break;
+        }
     }
 }
 
@@ -380,21 +376,37 @@ void client::netSend(int messageType) {
 
     switch(messageType) {
 
-        case PING:
+        case CLIENT_CONNECTED: {
+            break;
+        }
+
+        case PING: {
             Priority=HIGH_PRIORITY;
-        break;
+            break;
+        }
 
-        case PONG:
+        case PONG: {
             Priority=HIGH_PRIORITY;
-        break;
+            break;
+        }
 
-        case VERSION_ASK:
-            //
-        break;
+        case VERSION_ANSWER: {
+            myBitStream->Write(version);
+            break;
+        }
 
-        default:
-            cout << "send: unknown: '" << (int)messageType << endl;
-        break;
+        case LOGIN_ANSWER: {
+            RakNet::RakString user = config.getValue("User","none").c_str();
+            RakNet::RakString pass = config.getValue("Pass","none").c_str();
+            myBitStream->Write(user);
+            myBitStream->Write(pass);
+            break;
+        }
+
+        default: {
+            cout << "netSend: Not Handled: " << netMessageTypenames[messageType] << endl;
+            break;
+        }
     }
 
     // Senden

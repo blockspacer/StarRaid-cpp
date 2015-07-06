@@ -9,8 +9,19 @@ server::server(string pPath) {
 	// load configs
 	config.load(pPath);
 
+	// connect to DB
+	string name = config.getValue("Name", "starraid");
+	string user = config.getValue("User", "root");
+	string pass = config.getValue("Pass", "");
+	string host = config.getValue("Host", "127.0.0.1");
+	string port = config.getValue("Port", "3306");
+	db.connect(name,host,user,pass,port);
+
 	// load objects
 	objLoad();
+
+	// version
+	version=101;
 
 	// timers
 	runtime=0;
@@ -42,7 +53,7 @@ server::~server() {
 	for(map<RakNet::SystemAddress, networkClient>::iterator i=clients.begin(); i!=clients.end(); ++i) {
 		netSend(TERMINATE,(*i).first);
 	}
-
+	cout << endl;
 }
 
 void server::tick(void) {
@@ -100,12 +111,6 @@ void server::tick(void) {
 }
 
 void server::objLoad(void) {
-	string name = config.getValue("Name", "starraid");
-	string user = config.getValue("User", "root");
-	string pass = config.getValue("Pass", "");
-	string host = config.getValue("Host", "127.0.0.1");
-	string port = config.getValue("Port", "3306");
-	db.connect(name,host,user,pass,port);
 	vector<srObject> tmp;
 	vector<srObject>::iterator i;
 	tmp = db.loadObjects();
@@ -161,9 +166,6 @@ void server::objLoop(void) {
 
 }
 
-
-
-
 void server::netInit(void) {
 	RakNet::SocketDescriptor tmpSocketDescriptor;
 	tmpSocketDescriptor.port = 60000;
@@ -205,49 +207,27 @@ void server::netTick(void) {
 	while(rakPacket) {
 		identifier = (int)rakPacket->data[0];
 		switch(identifier) {
-			case ID_REMOTE_DISCONNECTION_NOTIFICATION:
-				cout << "netTick: Another client has disconnected." << endl;
-			break;
 
-			case ID_REMOTE_CONNECTION_LOST:
-				cout << "netTick: Another client has lost the connection." << endl;
-			break;
-
-			case ID_REMOTE_NEW_INCOMING_CONNECTION:
-				cout << "netTick: Another client has connected." << endl;
-			break;
-
-			case ID_CONNECTION_REQUEST_ACCEPTED:
-				cout << "netTick: A new connection." << endl;
-				netSend(VERSION_ASK, rakPacket->systemAddress);
-			break;
-
-			case ID_NEW_INCOMING_CONNECTION:
+			case ID_NEW_INCOMING_CONNECTION: {
 				cout << "netTick: A connection is incoming." << endl;
 				netClientAdd(rakPacket);
-			break;
+				break;
+			}
 
-			case ID_NO_FREE_INCOMING_CONNECTIONS:
-				cout << "netTick: The server is full." << endl;
-			break;
+			case ID_CONNECTION_LOST: { // also timeout
+				netClientTerminate(rakPacket->systemAddress);
+				break;
+			}
 
-			case ID_DISCONNECTION_NOTIFICATION:
-				cout << "netTick: A client has disconnected." << endl;
-			break;
-
-			case ID_CONNECTION_LOST:
-				cout << "netTick: A client lost the connection." << endl;
-			break;
-
-
-			//**** custom ****
-			case ID_USER_PACKET_ENUM:
+			case ID_USER_PACKET_ENUM: {
 				netRead(rakPacket);
-			break;
+				break;
+			}
 
-			default:
-				cout << "netTick: unknown: " << identifier << endl;
-			break;
+			default: {
+				cout << "netTick: Not Handled: " << rakNetMessageNames[identifier] << endl;
+				break;
+			}
 		}
 
 		// pop the package out of the buffer
@@ -270,14 +250,43 @@ void server::netRead(RakNet::Packet *packet) {
 
 	switch(messageType) {
 
-		case PING:
+		case CLIENT_CONNECTED: {
+			netSend(VERSION_ASK, rakPacket->systemAddress);
+			break;
+		}
+
+		case PING: {
 			netSend(PONG, rakPacket->systemAddress);
 			clients[packet->systemAddress].cntLaag = 0;
-		break;
+			break;
+		}
 
-		default:
-			cout << "netRead: unknown '" << messageType << endl;
-		break;
+		case PONG: {
+			break;
+		}
+
+		case VERSION_ANSWER: {
+			int tmpVersion=0;
+			myBitStream.Read(tmpVersion);
+			if(tmpVersion==version) netSend(LOGIN_ASK, rakPacket->systemAddress);
+			else netSend(VERSION_WRONG, rakPacket->systemAddress);
+			break;
+		}
+
+		case LOGIN_ANSWER: {
+			RakNet::RakString user, pass;
+			myBitStream.Read(user);
+			myBitStream.Read(pass);
+			long id = db.login(user.C_String(), pass.C_String());
+			clients[packet->systemAddress].name = user;
+			clients[packet->systemAddress].objektID = id;
+			break;
+		}
+
+		default: {
+			cout << "netRead: Not Handled: " << netMessageTypenames[messageType] << endl;
+			break;
+		}
 	}
 }
 
@@ -293,24 +302,35 @@ void server::netSend(int messageType, RakNet::SystemAddress address) {
 
 	switch(messageType) {
 
-		case PONG:
+		case PONG: {
 			Priority=HIGH_PRIORITY;
-		break;
+			break;
+		}
 
-		case VERSION_ASK:
-			//
-		break;
+		case VERSION_ASK: {
+			break;
+		}
 
-		case TERMINATE:
+		case VERSION_WRONG: {
+			break;
+		}
+
+		case LOGIN_ASK: {
+			break;
+		}
+
+		case TERMINATE: {
+			cout << "netSend: TERMINATE" << endl;
 			Priority=HIGH_PRIORITY;
-		break;
+			break;
+		}
 
-		default:
-			cout << "netSend: unknown: '" << messageType << endl;
-		break;
+		default: {
+			cout << "netSend: Not Handled: " << netMessageTypenames[messageType] << endl;
+			break;
+		}
 	}
 
 	// Senden
-	rakPeer->Send(myBitStream, Priority, RELIABLE, 0, address, true);
+	rakPeer->Send(myBitStream, Priority, RELIABLE, 0, address, false);
 }
-

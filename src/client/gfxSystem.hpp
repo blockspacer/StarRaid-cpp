@@ -79,15 +79,10 @@ class gfxSystem : public sdlHelper {
 		/// Sets a few internal options
 		void init(int resX, int resY);
 
-
 		// Main ressources
 		gfxImage *sfNone;
 		gfxImage *sfMenue;
 		gfxImage *sfMsg;
-//		gfxImage *sfRadarSpotNeutralSmall;
-//		gfxImage *sfMouseSpot;
-//		gfxImage *sfStarBig, *sfStarMiddle, *sfStarSmall;
-
 
 		/// Contains a Arial12 font
 		gfxFont *fontArial12;
