@@ -114,6 +114,8 @@ class client {
 		/// Settings
 		int   screenResX,
 			  screenResY,
+			  screenResHalfX,
+			  screenResHalfY,
 			  screenFull,
 			  screenDepth;
 
@@ -130,6 +132,11 @@ class client {
 		float runtimeDelta;
 
 
+		/// Objects
+		void objectsDraw(void);
+		//->structPosition
+
+
 		/// Network
 		void netTick(void);
 		void netRead(RakNet::Packet *packet);
@@ -140,21 +147,21 @@ class client {
 		RakNet::Packet *rakPacket;
 
 
-        /// Vector that holds the star types and positions
-        struct structStar {
-            float x, y;
-            int typ;
-        };
-        vector<structStar> stars;
-        int starsCount; //!< Is just counting the Stars
-        void starsInit(void);
-        void starsMove(int moveX, int moveY);
-        void starsDraw();
+		/// Vector that holds the star types and positions
+		struct structStar {
+			float x, y;
+			int typ;
+		};
+		vector<structStar> stars;
+		int starsCount; //!< Is just counting the Stars
+		void starsInit(void);
+		void starsMove(int moveX, int moveY);
+		void starsDraw();
 
 
-        /// Objects
-        long selfHandle;
-        map<long, srObject> objects;
+		/// Objects
+		long selfHandle,selfX,selfY;
+		map<long, srObject> objects;
 
 
 		/// Mouse
@@ -173,6 +180,10 @@ class client {
 
 		/// is set if the mouse position is changes
 		bool  flagMausMove;
+
+		struct structPosition {
+			long x, y;
+		};
 
 };
 
