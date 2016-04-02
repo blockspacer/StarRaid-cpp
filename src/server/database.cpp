@@ -27,7 +27,7 @@ void database::connect(string pName, string pHost, string pUser, string pPass, s
 		cout << "database::connect: " << (const char*)mysql_error(sqlSocket) << endl;
 		throw exception();
 	}
-	if(mysql_real_connect(sqlSocket, host, user, pass, name, 0, 0, 0) == NULL) {
+	if(mysql_real_connect(sqlSocket, host.c_str(), user.c_str(), pass.c_str(), name.c_str(), 0, 0, 0) == NULL) {
 		cout << "database::connect: " << (const char*)mysql_error(sqlSocket) << endl;
 		throw exception();
 	}
