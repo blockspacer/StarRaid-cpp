@@ -57,6 +57,7 @@ using namespace std;
 class server {
 
 	private:
+		int debugLevel;
 		int version;
 		long runtime;	//!< In var count up every second and contains the runtime
 		int fps,        //!< This var counts the frames together and is reset every second

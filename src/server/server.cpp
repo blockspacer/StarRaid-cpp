@@ -4,10 +4,11 @@ using namespace std;
 
 server::server(string pPath) {
 	logfile.open("server.log", ios::out);
-	logfile << "Init ... ";
 
 	// load configs
 	config.load(pPath);
+	debugLevel=config.getValue("debugLevel", 1); // 1: basic, 2: errors, 3: infos, 4: performance
+	if(debugLevel>=1) logfile << "server::server ... START" << endl;
 
 	// connect to DB
 	string name = config.getValue("Name", "starraid");
@@ -45,7 +46,7 @@ server::server(string pPath) {
 	netRx = 0;
 	netInit();
 
-	logfile << "OK" << endl;
+	if(debugLevel>=1) logfile << "server::server ... DONE" << endl;
 }
 
 server::~server() {
@@ -53,7 +54,7 @@ server::~server() {
 	for(map<RakNet::SystemAddress, networkClient>::iterator i=clients.begin(); i!=clients.end(); ++i) {
 		netSend(TERMINATE,(*i).first);
 	}
-	cout << endl;
+	cout << endl; // fix prompt ;-)
 }
 
 void server::tick(void) {
@@ -62,7 +63,7 @@ void server::tick(void) {
 	// second
 	if( timers.checkTimer("second") ) {
 
-		// caqche per second values
+		// cache per second values
 		fpsSmooth = fps;
 		lpsSmooth = lps;
 		dpsSmooth = netTx + netRx;
@@ -71,13 +72,15 @@ void server::tick(void) {
 		runtime++;
 
 		// some debugging
-		logfile << "[Tick-" << runtime << "] ";
-		logfile << "obj: " << objects.size() << ", ";
-		logfile << "fps: " << fpsSmooth << ", ";
-		logfile << "lps: " << lpsSmooth << ", ";
-		logfile << "blps: " << blpsSmooth << ", ";
-		logfile << "rx: " << netRx << ", ";
-		logfile << "tx: " << netTx << endl;
+		if(debugLevel>=4) {
+			logfile << "[Tick-" << runtime << "] ";
+			logfile << "obj: " << objects.size() << ", ";
+			logfile << "fps: " << fpsSmooth << ", ";
+			logfile << "lps: " << lpsSmooth << ", ";
+			logfile << "blps: " << blpsSmooth << ", ";
+			logfile << "rx: " << netRx << ", ";
+			logfile << "tx: " << netTx << endl;
+		}
 
 		// reset counter
 		fps = 0;
@@ -111,12 +114,14 @@ void server::tick(void) {
 }
 
 void server::objLoad(void) {
+	if(debugLevel>=1) logfile << "server::objLoad ... ";
 	vector<srObject> tmp;
 	vector<srObject>::iterator i;
 	tmp = db.loadObjects();
 	for(i = tmp.begin(); i != tmp.end(); ++i) {
 		objects[(*i).handle] = (*i);
 	}
+	if(debugLevel>=1) logfile << "OK" << endl;
 }
 /*
  * Updates relevant (near) objects list and processes
@@ -167,11 +172,13 @@ void server::objLoop(void) {
 }
 
 void server::netInit(void) {
+	if(debugLevel>=1) logfile << "server::netInit ... ";
 	RakNet::SocketDescriptor tmpSocketDescriptor;
 	tmpSocketDescriptor.port = 60000;
 	strcpy(tmpSocketDescriptor.hostAddress, "0");
 	rakPeer->Startup(1024, &tmpSocketDescriptor, 1);
 	rakPeer->SetMaximumIncomingConnections(1024);
+	if(debugLevel>=1) logfile << "OK" << endl;
 }
 
 void server::netClientCheck(void) {
@@ -191,14 +198,14 @@ void server::netClientCheck(void) {
 void server::netClientAdd(RakNet::Packet *packet) {
 	networkClient tmpClient;
 	clients.insert(pair<RakNet::SystemAddress, networkClient>(packet->systemAddress, tmpClient));
-	cout << "netClientTerminate: Client Added." << endl;
+	if(debugLevel>=3) logfile << "server::netClientAdd> " << packet->systemAddress.ToString() << endl;
 }
 
 void server::netClientTerminate(RakNet::SystemAddress address) {
 	netSend(TERMINATE,address);				// send terminate-notification to client
 	clients.erase(address);					// remove client from pool
 	rakPeer->CloseConnection(address,1);	// close peers conection
-	cout << "netClientTerminate: Client Terminated." << endl;
+	if(debugLevel>=3) logfile << "server::netClientTerminate> " << address.ToString() << endl;
 }
 
 void server::netTick(void) {
@@ -209,7 +216,6 @@ void server::netTick(void) {
 		switch(identifier) {
 
 			case ID_NEW_INCOMING_CONNECTION: {
-				cout << "netTick: A connection is incoming." << endl;
 				netClientAdd(rakPacket);
 				break;
 			}
@@ -225,7 +231,7 @@ void server::netTick(void) {
 			}
 
 			default: {
-				cout << "netTick: Not Handled: " << rakNetMessageNames[identifier] << endl;
+				if(debugLevel>=2) logfile << "server::netTick> Not Handled: " << rakNetMessageNames[identifier] << endl;
 				break;
 			}
 		}
@@ -256,7 +262,7 @@ void server::netRead(RakNet::Packet *packet) {
 		}
 
 		case PING: {
-			netSend(PONG, rakPacket->systemAddress);
+			//netSend(PONG, rakPacket->systemAddress); // no need to actully answer
 			clients[packet->systemAddress].cntLaag = 0;
 			break;
 		}
@@ -268,8 +274,15 @@ void server::netRead(RakNet::Packet *packet) {
 		case VERSION_ANSWER: {
 			int tmpVersion=0;
 			myBitStream.Read(tmpVersion);
-			if(tmpVersion==version) netSend(LOGIN_ASK, rakPacket->systemAddress);
-			else netSend(VERSION_WRONG, rakPacket->systemAddress);
+			if(debugLevel>=3) logfile << "server::netRead> VERSION_ANSWER("<<tmpVersion<<"): ";
+			if(tmpVersion==version) {
+				netSend(LOGIN_ASK, rakPacket->systemAddress);
+				if(debugLevel>=3) logfile << "OK" << endl;
+			}
+			else {
+				netSend(VERSION_WRONG, rakPacket->systemAddress);
+				if(debugLevel>=3) logfile << "FAILED" << endl;
+			}
 			break;
 		}
 
@@ -277,18 +290,23 @@ void server::netRead(RakNet::Packet *packet) {
 			RakNet::RakString user, pass;
 			myBitStream.Read(user);
 			myBitStream.Read(pass);
+			if(debugLevel>=3) logfile << "server::netRead> LOGIN_ANSWER("<<user<<"/"<<pass<<"): ";
 			long id = db.login(user.C_String(), pass.C_String());
 			if(id!=0) {
 				clients[packet->systemAddress].name = user;
 				clients[packet->systemAddress].objektID = id;
 				objects[id].pilotAddress = packet->systemAddress;
 				netAfterLogin(rakPacket->systemAddress);
-			} else netSend(LOGIN_WRONG, rakPacket->systemAddress);
+				if(debugLevel>=3) logfile << "OK" << endl;
+			} else {
+				netSend(LOGIN_WRONG, rakPacket->systemAddress); //TODO-2: remember and bann at X times 
+				if(debugLevel>=3) logfile << "FAILED" << endl;
+			}
 			break;
 		}
 
 		default: {
-			cout << "netRead: Not Handled: " << netMessageTypenames[messageType] << endl;
+			if(debugLevel>=2) logfile << "server::netRead: Not Handled: " << netMessageTypenames[messageType] << endl;
 			break;
 		}
 	}
@@ -329,7 +347,7 @@ void server::netSend(int messageType, RakNet::SystemAddress address) {
 		}
 
 		default: {
-			cout << "netSend: Not Handled: " << netMessageTypenames[messageType] << endl;
+			if(debugLevel>=2) logfile << "server::netSend: Not Handled: " << netMessageTypenames[messageType] << endl;
 			break;
 		}
 	}
