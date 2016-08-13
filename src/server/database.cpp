@@ -87,13 +87,13 @@ long database::login(string user, string pass) {
 
 	test = user.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890_");
 	if(test != string::npos) {
-		cout << "database::login: SQL injection detected" << endl;
+		cout << "database::login: SQL injection detected" << endl; //TODO-3 kill client
 	    return retval;
 	}
 
 	test = pass.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890_");
 	if(test != string::npos) {
-		cout << "database::login: SQL injection detected" << endl;
+		cout << "database::login: SQL injection detected" << endl; //TODO-3 kill client
 	    return retval;
 	}
 
