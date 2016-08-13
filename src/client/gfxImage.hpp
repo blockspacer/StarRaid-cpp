@@ -79,10 +79,10 @@ class gfxImage : public sdlHelper {
         void draw(SDL_Surface *target);
 
         /// Draw the first image of the pool
-        void draw(SDL_Surface *target, int x, int y);
+        void draw(SDL_Surface *target, Sint16 x, Sint16 y);
 
         /// Draw a specific image out of the pool
-        void draw(SDL_Surface *target, int x, int y, int surfaceNumber);
+        void draw(SDL_Surface *target, Sint16 x, Sint16 y, int surfaceNumber);
 
         /// Draw a an image from the center
         void drawCentered(SDL_Surface *target, int x, int y, int surfaceNumber);

@@ -256,7 +256,7 @@ void gfxImage::drawCentered(SDL_Surface *target, int x, int y, int surfaceNumber
  *   @param flagDefault If set it will take it own saved positions, usefull for static positions
  *   @param surfaceNumber The number of the image in the pool
  */
-void gfxImage::draw(SDL_Surface *target, int x, int y, int surfaceNumber) {
+void gfxImage::draw(SDL_Surface *target, Sint16 x, Sint16 y, int surfaceNumber) {
     if(flagInit==1) {
         // if the wished surface doesn exist give default
 //        if(surfaceLoaded<surfaceNumber) surfaceNumber = 0;
@@ -280,7 +280,7 @@ void gfxImage::draw(SDL_Surface *target, int x, int y, int surfaceNumber) {
  *   @param y The y position
  *   @param flagDefault If set it will take it own saved positions, usefull for static positions
  */
-void gfxImage::draw(SDL_Surface *target, int x, int y) {
+void gfxImage::draw(SDL_Surface *target, Sint16 x, Sint16 y) {
     draw(target, x, y, 0);
 }
 
