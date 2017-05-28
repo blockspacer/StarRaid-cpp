@@ -23,7 +23,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Copyright:
- *    2005-2015 by Daniel (xuedi) Koch
+ *    2005-2017 by Daniel (xuedi) Koch
  *
  */
 
